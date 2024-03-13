@@ -4,18 +4,14 @@ show_menu <- function() {
     cat("This menu shows you possible methods to calculate genetic diversity and uniqueness.\n")
     cat("Type in the number that precedes the calculation method you want to use to get the results.\n")
     cat("1. Inform myself about the options \n")
-    cat("2. Calculate rarefy, rarecurve and rareslope \n")
+    cat("2. Calculate diversity indices \n")
     cat("3. Calculate AMOVA \n")
     cat("4. Calculate overlaps \n")
     cat("     The prerequisite for calculating overlaps is the use of EcoSim-R. First download EcoSim-R: \n")
     cat("     https://www.uvm.edu/~ngotelli/EcoSim/EcoSim.html \n")
     cat("     After downloading EcoSim-R, save it in the folder of this R project, so that the further code can be executed. \n")
-    cat("5. Calculate all and compare all methods\n")
-    cat("6. Calculate all methods of several data sets \n")
-    cat("     If you want to read in several data sets simultaniously make shure your .xlsx -sheet is called >>welcomeR<<. \n")
-    cat("     Otherwise R will not load your input- data. \n")
-    cat("7. Compare results of different data sets, without calculating them (again). \n")
-    cat("8. Show citations\n")
+    cat("5. Compare all methods\n")
+    cat("6. Show citations\n")
     cat("0. Exit\n")
     
     choice <- readline("Choose an option: ")
@@ -27,36 +23,12 @@ show_menu <- function() {
       
       cat(" \n")
       cat(" \n") 
-      cat("================= rarefy(), rarecurve() and rareslope() =================.\n")
+      cat("================= diversity indices =================.\n")
       cat(" \n")
       cat(" \n")
-      cat("These three functions are designed to study species diversity.")
-      cat("They can be used to compare species diversity between different groups, e.g. different ecological niches, climatic zones, etc.")
-      cat("This R-Script applies these three functions to compare allele diversity between different sites.\n")
-      cat(" \n")
-      cat("rarefy() gives information about the diversity at a certain sample size and shows the standard error for this value.\n")
-      cat("rarefy() is based on: \n")
-      cat("Heck, K.L., van Belle, G. & Simberloff, D. (1975). Explicit calculation of the rarefaction diversity measurement and the determination of sufficient sample size. Ecology 56, 1459-1461.\n")
-      cat("Hurlbert, S.H. (1971). The nonconcept of species diversity: a critique and alternative parameters. Ecology 52, 577-586.\n")
-      cat(" \n")
-      cat("rarecurve() displays a graph showing how much diversity increases when the sample size is increased.\n")
-      cat("How rarecurve() is calculated: \n")
-      cat("rarecurve() draws rarefaction curves evaluated by using the interval of step sample sizes, always including 1 and total sample size.")
-      cat("The underlying table with the data points for the functions can be viewed with rarecurve( tidy = TRUE).\n")
-      cat(" \n")
-      cat("rareslope() forms the derivative of the rarefraction curves for a given sample size and displays the slope for that sample size.\n")
-      cat(" \n")
-      cat("For more questions use ?rarefy() , ?rarecurve() and ?rareslope(). \n")
-      cat(" \n")
-      cat(" \n")
-      cat(" \n")
-      cat("This R-script calculates allele diversity for all sites with the largest sample size, which still allows conclusions to be drawn about how allele diversity would increase further with a larger sample. ")
-      cat("Because the slopes of the rarefaction curves are to be compared across all locations, only the sample size for which there is still information available at all locations can be chosen. ")
-      cat("If the location with the smallest maximum sample size has a significantly smaller maximum sample size than other locations, interesting information about the other locations may be lost. ")
-      cat("Whether there are large differences between the locations can be read in the graph created by rarecurve. ")
-      cat("The allele diversity and the slope for all locations are entered into a dataframe. ")
-      cat("Moreover the script creates a graph with confidence intervals based on the standard errors. ")
-      cat("This graph allows to determine whether there may be overlaps in the allelic diversity of the locations.")
+      cat("There are many ways to calculate diversity indices. In this case, poppr() from the package poppr is used. ")
+      cat("Read more about poppr in this article:\n")
+      cat("Kamvar, Z. N., Tabima, J. F., & Grünwald, N. J. (2014). Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ, 2, e281.\n")
       cat(" \n")
       cat(" \n")
       cat(" \n")    
@@ -136,55 +108,10 @@ show_menu <- function() {
       
     } else if (choice == "5") {
       
-      scripts_to_source_list <- list("genetic_D&D__Speed_Ne_split_input.R" , "genetic_D&D__rarefy.R", "genetic_D&D__poppr_AMOVA.R", "genetic_D&D__Overlaps.R", "genetic_D&D__R_NeEstimator.R", "genetic_D&D__Speed_Ne_structure_results.R", "genetic_D&D__correlations.R")
-      
-      for (Index in 1:length(scripts_to_source_list)) {
-        if (Index < 5) {
-          # source("genetic_D&D__Speed_Ne_split_input.R")
-          # source("genetic_D&D__rarefy.R")
-          # source("genetic_D&D__poppr_AMOVA.R")
-          # source("genetic_D&D__Overlaps.R")  
-          # source("genetic_D&D__R_NeEstimator.R")
-          source(scripts_to_source_list[Index][[1]])
-        } else if (list.files(path = paste("Results", describe_results_variable, "/Speed_Ne/input/", sep = ""), pattern = "\\.txt$", full.names = TRUE)){
-          # source("genetic_D&D__Speed_Ne_structure_results.R")
-          # source("genetic_D&D__correlations.R")
-          # #source("genetic_D&D__regression.R")
-          source(scripts_to_source_list[Index][[1]])
-        }
-      }
+      source("correlations_all_methods.R")
+      source("correlations_without_NeS.R")
 
     } else if (choice == "6") {
-      
-      xlsx_files <- list.files(path = "./", pattern = "\\.xlsx$", full.names = TRUE)
-      for (xlsx_file in xlsx_files){
-        file_path <- xlsx_file
-        sheet <- "welcomeR"
-        original_file <- read_xlsx(file_path, sheet = sheet)
-        # This code helps keeping an overview of the results.
-        describe_results_variable <- paste("_", tools::file_path_sans_ext(file_path), sep = "")
-        # specify the name of the folder where the results will be saved
-        output_folder_path <- paste("Results", describe_results_variable, sep = "")
-        # If it does not exist already
-        if (!file.exists(output_folder_path)) {
-        # create folder
-          dir.create(output_folder_path, recursive = TRUE)
-        }
-        
-        source("genetic_D&D__rarefy.R")
-        source("genetic_D&D__poppr_AMOVA.R")
-        source("genetic_D&D__Overlaps.R")  
-        source("genetic_D&D__correlations.R")
-        source("genetic_D&D__regression.R")
-      }
-      
-      source("genetic_D&D_combine_correlations.R")
-      
-    } else if (choice == "7") {
-      
-      source("genetic_D&D_combine_correlations.R")
-      
-    } else if (choice == "8") { 
       
       cat("enables working with genetic data\n")
       print(citation("adegenet"))
