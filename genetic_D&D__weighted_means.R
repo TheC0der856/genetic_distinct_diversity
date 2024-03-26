@@ -10,8 +10,8 @@ correlation_matrix_with_Ne <- data.frame(
   NeEstimator = c(-0.349, 0.392, 0.034, 1, 0.586), 
   SpeedNe = c(-0.421, 0.34, 0.192, 0.586, 1)
 )
-colnames(correlation_matrix_with_Ne) <- c("AMOVA", "λ", "EcoSim", "Ne Estimator", "Speed Ne")
-rownames(correlation_matrix_with_Ne) <- c("AMOVA", "λ", "EcoSim", "Ne Estimator", "Speed Ne")
+colnames(correlation_matrix_with_Ne) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne")
+rownames(correlation_matrix_with_Ne) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne")
 correlation_matrix_with_Ne <- as.matrix(correlation_matrix_with_Ne)
 
 p_matrix_with_Ne <- data.frame(
@@ -21,8 +21,8 @@ p_matrix_with_Ne <- data.frame(
   Ne = c(0.001, 0.001, 0.001, 1, 0.001),
   NeS = c(0.001, 1, 0.001, 0.001, 1)
 )
-colnames(p_matrix_with_Ne) <- c("AMOVA", "λ", "EcoSim", "Ne Estimator", "Speed Ne")
-rownames(p_matrix_with_Ne) <- c("AMOVA", "λ", "EcoSim", "Ne Estimator", "Speed Ne")
+colnames(p_matrix_with_Ne) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne")
+rownames(p_matrix_with_Ne) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne")
 p_matrix_with_Ne <- as.matrix(p_matrix_with_Ne)
 
 
