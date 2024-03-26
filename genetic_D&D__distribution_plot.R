@@ -29,7 +29,7 @@ EcoSim <- c(EcoSim, E)
 plot(AMOVA[-(207:208)],
      EcoSim[-(207:208)],
      xlab = "AMOVA",
-     ylab = "EcoSim", 
+     ylab = "Allelic Overlap", 
      cex.lab = 1.2,               
      cex.axis = 1)
 
@@ -50,8 +50,8 @@ length(lamda)
 
 plot(lamda,
      EcoSim,
-     xlab = "λ",
-     ylab= "EcoSim", 
+     xlab = expression("λ"["cor"]),
+     ylab= "Allelic Overlap", 
      cex.lab = 1.2,               
      cex.axis = 1)
 
@@ -63,7 +63,7 @@ plot(lamda,
 
 plot(lamda[-(207:208)],
      AMOVA[-(207:208)],
-     xlab = "λ",
+     xlab = expression("λ"["cor"]),
      ylab = "AMOVA", 
      cex.lab = 1.2,               
      cex.axis = 1)
@@ -221,7 +221,7 @@ legend(x = "topright", legend = labels, fill = colors)
 plot(subset(all_results_with_Ne_final, Ne <= 800)$Ne,
      subset(all_results_with_Ne_final, Ne <= 800)$observed_overlap, 
      xlab = expression(italic("N")[italic("e")]),
-     ylab = "EcoSim", 
+     ylab = "Allelic Overlap", 
      cex.lab = 1.2,               
      cex.axis = 1, 
      col= "darkgoldenrod", 
@@ -244,7 +244,7 @@ legend(x = "bottomright", legend = labels, fill = colors)
 plot(subset(all_results_with_Ne_final, Ne <= 100)$Ne,
      subset(all_results_with_Ne_final, Ne <= 100)$allelic_diversity ,
      xlab = expression(italic("N")[italic("e")]),
-     ylab = "λ", 
+     ylab = expression("λ"["cor"]), 
      cex.lab = 1.2,               
      cex.axis = 1, 
      col= "darkgoldenrod", 
