@@ -163,7 +163,7 @@ pie(table(all_thresholds_met$amova),
 
 
 pie(table(all_thresholds_met$Eco),
-    main = "EcoSim", 
+    main = "Allelic Overlap", 
     labels = rep("", length(table(all_thresholds_met$NeE))),
     col=c("cornsilk1", "lightskyblue1"))
 
@@ -171,7 +171,7 @@ pie(table(all_thresholds_met$Eco),
 
 
 pie(table(all_thresholds_met$lamda),
-    main = "λ", 
+    main = expression(bold("λ"["cor"])), 
     labels = rep("", length(table(all_thresholds_met$NeE))),
     col=c("cornsilk1", "lightskyblue1", "salmon3"))
 
