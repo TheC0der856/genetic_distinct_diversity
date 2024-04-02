@@ -64,6 +64,19 @@ for (dataset in datasets) {
   # add a row to the table if the threshold was met
   Eco$threshold_met <- ifelse(Eco$observed_overlap_percentages > 10, "B1, A1b", ifelse(Eco$observed_overlap_percentages > 1, "A1b", "no protection"))
   
+  AvTD <- read.csv(file= paste("Results_", dataset, "/AvTD/AvTD_results.csv", sep = ""))
+  # create a table like in the descriptions of the KBA standard
+  AvTD <- AvTD %>%
+    slice(1:(n() - 1))
+  # calculate percentages of variance between sites 
+  sum <- sum(AvTD$Delta..1)
+  AvTD$percentage <- NA
+  for (i in 1:length(AvTD$Delta..1)) {
+    AvTD$percentage[i] <- (AvTD$Delta..1[i] / sum) * 100
+  }
+  # add a row to the table if the threshold was met
+  AvTD$threshold_met <- ifelse(AvTD$percentage > 10, "B1, A1b", ifelse(AvTD$percentage > 1, "A1b", "no protection"))
+  
   
   # Combine threshold met information!
   thresholds_met <- data.frame(
@@ -71,6 +84,7 @@ for (dataset in datasets) {
     amova = amova$threshold_met,
     Eco = Eco$threshold_met,
     lamda = lamda$threshold_met, 
+    AvTD = AvTD$threshold_met,
     NeS = NA, 
     NeE = NA, 
     dataset = dataset
@@ -151,7 +165,7 @@ for (dataset in datasets) {
 #lamda: Nothing: 7/ A1b: 235/ B1, A1b: 97
 #NeS: I: 59/ Nothing: 11/ VI: 116/ NA: 153
 #NeE: I: 116 / Nothing: 37 / VI: 99 / NA: 87
-par(mfrow = c(2, 3))
+par(mfrow = c(2, 4))
 
 pie(table(all_thresholds_met$amova),
     main = "AMOVA", 
@@ -172,6 +186,13 @@ pie(table(all_thresholds_met$Eco),
 
 pie(table(all_thresholds_met$lamda),
     main = expression(bold("λ"["cor"])), 
+    labels = rep("", length(table(all_thresholds_met$NeE))),
+    col=c("cornsilk1", "lightskyblue1", "salmon3"))
+
+#legend("topright", legend = c("A1b > 1%" , "B1 > 10%"))
+
+pie(table(all_thresholds_met$AvTD),
+    main = "\u0394+", 
     labels = rep("", length(table(all_thresholds_met$NeE))),
     col=c("cornsilk1", "lightskyblue1", "salmon3"))
 
@@ -198,6 +219,8 @@ pie(table(all_thresholds_met$NeS, useNA = "ifany"),
     col=c("royalblue4", "lightgoldenrod", "salmon3", "white"))
 
 plot.new()
+plot.new()
+par(xpd = TRUE) 
 legend("center",
        legend = c("> 1% (A1b)" ,
                   "> 10% (B1, A1b)",
