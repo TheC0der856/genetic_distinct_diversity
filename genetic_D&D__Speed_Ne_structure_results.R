@@ -146,39 +146,14 @@ if (dir.exists(paste("Results", describe_results_variable,"/NeSpeed/input_files"
     }  
     
     
-    ###################### Detect outliers and clean up the data set ###################################
+    ###################### Detect wrong results and clean up the data set ###################################
     
     # remove the row if it has a negative Ne, infinity or NA as Ne
     if ("infinity" %in% Ne_results$Ne || any(as.numeric(Ne_results$Ne) < 0) || any(is.na(Ne_results$Ne))) {
       Ne_results <- subset(Ne_results, !(Ne == "infinity" | as.numeric(Ne) < 0 | is.na(Ne)))
     }
     
-    # # visualize outliers:
-    # boxplot(as.numeric(Ne_results$Ne))
-    # 
-    # # save plot:
-    # dev.copy(png, file.path(output_folder_path, "outliers_removed.png"))
-    # dev.off()
-    # 
-    # # remove outliers: 
-    # boxplot(as.numeric(Ne_results$Ne), plot=FALSE)$out
-    # outliers <- boxplot(as.numeric(Ne_results$Ne), plot=FALSE)$out
-    # to_remove <- which(as.numeric(Ne_results$Ne) %in% outliers)
-    # if (length(to_remove) > 0) {
-    #   Ne_results <- Ne_results[-to_remove, ]
-    # }
-    # The Code above uses the interquartile range method (IQR): 
-    # This method should not be applied to all distributions! 
-    # Be careful and check you distribution! 
-    #shapiro.test(Ne_results$Ne)
-    # This is in detail how the outliers are identified:
-    #quartiles <- quantile(Ne_results$Ne, probs=c(.25, .75), na.rm = FALSE)
-    #IQR <- IQR(Ne_results$Ne)
-    #Lower <- quartiles[1] - 1.5*IQR
-    #Upper <- quartiles[2] + 1.5*IQR 
-    #Ne_results$Ne_cleaned <- subset(Ne_results$Ne, Ne_results$Ne > Lower & Ne_results$Ne < Upper)
     
-
     ######################### save table ####################################################
     
     
