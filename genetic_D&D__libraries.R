@@ -1,19 +1,19 @@
 # Install packages and load the libraries if they have not already been installed or loaded.
 # For each package you will find a comment on what it is used for.
 
-if(!require('readxl')) {       # read_xlsx()
+if(!require('readxl')) {       # read_xlsx() , load .xlsx-files
   install.packages('readxl')
 }
-if(!require('adegenet')) {       # df2genind()
+if(!require('adegenet')) {       # df2genind() , enables working with genetic data
   install.packages('adegenet')
 }
-if(!require('dplyr')) {       # %>% select() # be careful! An update could cause problems with the code.
+if(!require('dplyr')) {       # %>% select() , simplifies working with tables
   install.packages('dplyr')
 }
-if(!require('tidyr')) {       # %>% unite()
+if(!require('tidyr')) {       # %>% unite() , simplifies working with tables
   install.packages('tidyr')
 }
-if(!require('poppr')) {       # poppr.amova(), poppr()
+if(!require('poppr')) {       # poppr.amova(), poppr() , calculate AMOVA and lambda
   install.packages('poppr')
 }
 if(!require('permute')) {       # used to use vegan
@@ -22,12 +22,13 @@ if(!require('permute')) {       # used to use vegan
 if(!require('lattice')) {       # used to use vegan
   install.packages('lattice')
 }
-if(!require('vegan')) {       # taxondive(), taxa2dist()
+if(!require('vegan')) {       # taxondive(), taxa2dist() , calculate AvTD
   install.packages('vegan')
 }
-if(!require('corrplot')) {       # corrplot()
+if(!require('corrplot')) {       # corrplot() , display correlations
   install.packages('corrplot')
 }
-if(!require('RLDNe')) {       # enables using NeEstimatorV2.1 (Do et al. 2014) in R 
-  install.packages("devtools")   # you need to install devtools first, before you can use this installation link to NeEstimator
+if(!require('RLDNe')) {       # enables using NeEstimatorV2.1 (Do et al. 2014) in R & calculate effective population sizes
+  install.packages("devtools")   # install devtools to use the installation link to NeEstimator
+  devtools::install_github(repo="zakrobinson/RLDNe")
 }
