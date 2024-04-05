@@ -44,8 +44,8 @@ if (dir.exists(paste("Results", describe_results_variable,"/NeSpeed/input_files"
       
         Speed_Ne_line_number <- grep("Estimates with Weir's" , Speed_Ne_output)
         
-        number_of_result_line <- Speed_Ne_line_number[1] + 4 # percentile confidence interval
-        number_of_result_line_parametric <- Speed_Ne_line_number[1] + 7 # normal distribution
+        number_of_result_line <- Speed_Ne_line_number[1] + 11 # percentile confidence interval, + 4 AWT
+        number_of_result_line_parametric <- Speed_Ne_line_number[1] + 14 # normal distribution, +7 AWT
         
         ################### save numbers with percentile confidence intervals ######################
         # The following code isolates the results from the result line.
@@ -153,20 +153,20 @@ if (dir.exists(paste("Results", describe_results_variable,"/NeSpeed/input_files"
       Ne_results <- subset(Ne_results, !(Ne == "infinity" | as.numeric(Ne) < 0 | is.na(Ne)))
     }
     
-    # visualize outliers:
-    boxplot(as.numeric(Ne_results$Ne))
-    
-    # save plot:
-    dev.copy(png, file.path(output_folder_path, "outliers_removed.png"))
-    dev.off()
-    
-    # remove outliers: 
-    boxplot(as.numeric(Ne_results$Ne), plot=FALSE)$out
-    outliers <- boxplot(as.numeric(Ne_results$Ne), plot=FALSE)$out
-    to_remove <- which(as.numeric(Ne_results$Ne) %in% outliers)
-    if (length(to_remove) > 0) {
-      Ne_results <- Ne_results[-to_remove, ]
-    }
+    # # visualize outliers:
+    # boxplot(as.numeric(Ne_results$Ne))
+    # 
+    # # save plot:
+    # dev.copy(png, file.path(output_folder_path, "outliers_removed.png"))
+    # dev.off()
+    # 
+    # # remove outliers: 
+    # boxplot(as.numeric(Ne_results$Ne), plot=FALSE)$out
+    # outliers <- boxplot(as.numeric(Ne_results$Ne), plot=FALSE)$out
+    # to_remove <- which(as.numeric(Ne_results$Ne) %in% outliers)
+    # if (length(to_remove) > 0) {
+    #   Ne_results <- Ne_results[-to_remove, ]
+    # }
     # The Code above uses the interquartile range method (IQR): 
     # This method should not be applied to all distributions! 
     # Be careful and check you distribution! 
@@ -209,20 +209,21 @@ if (dir.exists(paste("Results", describe_results_variable,"/NeSpeed/input_files"
     
     
     # create a plot with confidence intervals:
-    dev.off()
+    # dev.off()
+    # install ggplot package if you want to see this plot
     # create empty plot: 
-    confidence_intervals_plot <- ggplot(Ne_results, aes(x = site, y = as.numeric(Ne))) +
-      geom_boxplot()
-    
-    # Add confidence intervals:
-    confidence_intervals_plot + 
-      geom_errorbar(aes(ymin = as.numeric(lower_97_5_interval_percentile), ymax = as.numeric(upper_97_5_interval_percentile)), width = 0.2) +
-      labs(x = expression(bold("sites")), y = expression(bold("individuals"))) + 
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    
+    # confidence_intervals_plot <- ggplot(Ne_results, aes(x = site, y = as.numeric(Ne))) +
+    #   geom_boxplot()
+    # 
+    # # Add confidence intervals:
+    # confidence_intervals_plot + 
+    #   geom_errorbar(aes(ymin = as.numeric(lower_97_5_interval_percentile), ymax = as.numeric(upper_97_5_interval_percentile)), width = 0.2) +
+    #   labs(x = expression(bold("sites")), y = expression(bold("individuals"))) + 
+    #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    # 
     # save plot:
-    dev.copy(png, file.path(output_folder_path, "CI_Ne.png"))
-    dev.off()
+    # dev.copy(png, file.path(output_folder_path, "CI_Ne.png"))
+    # dev.off()
     
   } else {
     print("The folder does not contain any .txt files.")
