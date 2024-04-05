@@ -28,7 +28,7 @@ sheet <- "welcomeR"
 # load R Scripts
 # First, specify Calculate_genetic_distinctiveness_and_diversity as your R project to be able to use the following commands.
 source("genetic_D&D__libraries.R")
-#source("genetic_D&D__make_R_interactive.R")
+source("genetic_D&D__make_R_interactive.R")
 source("genetic_D&D__functions.R")
 # load file
 original_file <- read_xlsx(file_path, sheet = sheet)
