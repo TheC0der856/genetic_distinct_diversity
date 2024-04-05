@@ -191,45 +191,10 @@ if (any(Ne_R_results$Ne < 0)) {
   Ne_R_results <- Ne_R_results[Ne_R_results$Ne >= 0, ]
 }
 
-# # outliers
-# # visualize outliers:
-# boxplot(as.numeric(Ne_R_results$Ne))
-# # save plot:
-# dev.copy(png, file = "outliers_removed.png")
-# dev.off()
-# # remove outliers: 
-# boxplot(as.numeric(Ne_R_results$Ne), plot=FALSE)$out
-# outliers <- boxplot(as.numeric(Ne_R_results$Ne), plot=FALSE)$out
-# to_remove <- which(as.numeric(Ne_R_results$Ne) %in% outliers)
-# if (length(to_remove) > 0) {
-#   Ne_R_results <- Ne_R_results[-to_remove, ]
-# }
-
 # save results as a .csv- file
 # make sure the final results are saved in the correct folder
 write.csv(Ne_R_results, file = "Ne_results.csv", row.names = FALSE)
 
-# 
-# # create a plot with confidence intervals:
-# to see this plot you will need to install the ggplot package
-# # create empty plot: 
-# confidence_intervals_plot <- ggplot(Ne_R_results, aes(x = site, y = as.numeric(Ne))) +
-#   geom_boxplot()
-#  
-# # Add confidence intervals:
-# confidence_intervals_plot <- confidence_intervals_plot + 
-#   geom_errorbar(aes(ymin = as.numeric(lower_jackknife_confidence_interval), ymax = as.numeric(upper_jackknife_confidence_interval)), width = 0.2) +
-#   labs(x = expression(bold("sites")), y = expression(bold("individuals"))) + 
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-# 
-# # show plot
-# confidence_intervals_plot
-# 
-# # save plot:
-# png(file = "CI_Ne.png", width = 600, height =350)
-# confidence_intervals_plot
-# dev.off()
-#  
 # go back to the directory of the project, to enable running other scripts after this script
 setwd("..")
 setwd("..")
