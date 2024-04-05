@@ -160,7 +160,8 @@ Ne_R_results <- data.frame(
 # (page 22 "Critical Values" of help file NeEstimator2.1)
 
 # at line 19 we have the results of the first site without any allele frequency restrictions.
-counter <- 19 
+# at line 17 we have a threshold of 0.05
+counter <- 17 
 for (site in unique(Ne_Estimator_file$pop)) {
   # simplify reading the important lines
   line_of_Ne_output_text <- strsplit(Ne_output_txt[counter], " ")[[1]]
@@ -190,19 +191,19 @@ if (any(Ne_R_results$Ne < 0)) {
   Ne_R_results <- Ne_R_results[Ne_R_results$Ne >= 0, ]
 }
 
-# outliers
-# visualize outliers:
-boxplot(as.numeric(Ne_R_results$Ne))
-# save plot:
-dev.copy(png, file = "outliers_removed.png")
-dev.off()
-# remove outliers: 
-boxplot(as.numeric(Ne_R_results$Ne), plot=FALSE)$out
-outliers <- boxplot(as.numeric(Ne_R_results$Ne), plot=FALSE)$out
-to_remove <- which(as.numeric(Ne_R_results$Ne) %in% outliers)
-if (length(to_remove) > 0) {
-  Ne_R_results <- Ne_R_results[-to_remove, ]
-}
+# # outliers
+# # visualize outliers:
+# boxplot(as.numeric(Ne_R_results$Ne))
+# # save plot:
+# dev.copy(png, file = "outliers_removed.png")
+# dev.off()
+# # remove outliers: 
+# boxplot(as.numeric(Ne_R_results$Ne), plot=FALSE)$out
+# outliers <- boxplot(as.numeric(Ne_R_results$Ne), plot=FALSE)$out
+# to_remove <- which(as.numeric(Ne_R_results$Ne) %in% outliers)
+# if (length(to_remove) > 0) {
+#   Ne_R_results <- Ne_R_results[-to_remove, ]
+# }
 
 # save results as a .csv- file
 # make sure the final results are saved in the correct folder
@@ -210,7 +211,7 @@ write.csv(Ne_R_results, file = "Ne_results.csv", row.names = FALSE)
 
 # 
 # # create a plot with confidence intervals:
-
+# to see this plot you will need to install the ggplot package
 # # create empty plot: 
 # confidence_intervals_plot <- ggplot(Ne_R_results, aes(x = site, y = as.numeric(Ne))) +
 #   geom_boxplot()
