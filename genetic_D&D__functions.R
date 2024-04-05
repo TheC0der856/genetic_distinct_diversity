@@ -456,7 +456,7 @@ adjust_points_corrplot <- function (corr, method = c("circle", "square", "ellips
       #trace(corrplot, edit=TRUE)
       # Then replace the lines 445 - 449 in the original corrplot() script with the following four code lines and press save.
       place_points = function(sig.locs, point) {
-        text(pos.pNew[, 1][sig.locs]+x_position_point, (pos.pNew[, 2][sig.locs]+0.02), # this line of code was modified, to adjust the placement of *
+        text(pos.pNew[, 1][sig.locs]+x_position_point, (pos.pNew[, 2][sig.locs]+y_position_point), # this line of code was modified, to adjust the placement of *
              labels = point, col = pch.col, cex = pch.cex, 
              lwd = 2)
       }
