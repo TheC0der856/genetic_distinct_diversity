@@ -5,7 +5,7 @@
 
 all_names <- c("Ambystoma_bishopi.xlsx","Avicennia_marina.xlsx","Cameraria_ohridella.xlsx", "Carcinus_meanas.xlsx", "Cercidiphyllum_japonicum.xlsx", "Cymodocea_nodosa.xlsx", "Cystoseira_amentaceae.xlsx", "Euphydryas_aurina.xlsx", "Mytilus_galloprovincialis.xlsx", "Pagophila_eburnea.xlsx", "Panthera_leo.xlsx", "Posidonia_oceanica.xlsx", "Pyura_chilensis.xlsx", "Syncerus_caffer.xlsx", "Varroa_jacobsoni.xlsx", "Abies_alba.xlsx", "Argiope_bruennichi.xlsx" ,"Atriophallophorus_winterbourni.xlsx",  "Dracocephalum_ruyschiana.xlsx", "Entosphenus_tridentatus.xlsx", "Frangula_alnus.xlsx", "Gadus_morhua.xlsx", "Melitaea_cinxia.xlsx", "Nilparvata_lugens.xlsx", "Oncorhynchus_mykiss.xlsx", "Oncorhynchus_tshawytscha.xlsx", "Physeter_macrocephalus.xlsx", "Pinus_halepensis.xlsx", "Salmo_trutta.xlsx", "Tectona_grandis.xlsx")
 all_names_with_NeEstimator_results <- c("Ambystoma_bishopi.xlsx","Avicennia_marina.xlsx","Cameraria_ohridella.xlsx", "Carcinus_meanas.xlsx", "Cercidiphyllum_japonicum.xlsx", "Cymodocea_nodosa.xlsx", "Cystoseira_amentaceae.xlsx", "Euphydryas_aurina.xlsx", "Mytilus_galloprovincialis.xlsx", "Pagophila_eburnea.xlsx", "Panthera_leo.xlsx", "Posidonia_oceanica.xlsx", "Pyura_chilensis.xlsx", "Syncerus_caffer.xlsx", "Varroa_jacobsoni.xlsx", "Abies_alba.xlsx", "Atriophallophorus_winterbourni.xlsx",  "Dracocephalum_ruyschiana.xlsx", "Entosphenus_tridentatus.xlsx", "Frangula_alnus.xlsx", "Gadus_morhua.xlsx", "Melitaea_cinxia.xlsx", "Nilparvata_lugens.xlsx", "Oncorhynchus_mykiss.xlsx", "Oncorhynchus_tshawytscha.xlsx", "Physeter_macrocephalus.xlsx", "Pinus_halepensis.xlsx", "Salmo_trutta.xlsx", "Tectona_grandis.xlsx")
-all_names_with_SpeedNe_results <- c("Ambystoma_bishopi.xlsx","Avicennia_marina.xlsx","Cameraria_ohridella.xlsx", "Carcinus_meanas.xlsx", "Cercidiphyllum_japonicum.xlsx", "Cymodocea_nodosa.xlsx", "Cystoseira_amentaceae.xlsx", "Mytilus_galloprovincialis.xlsx", "Pagophila_eburnea.xlsx", "Panthera_leo.xlsx", "Posidonia_oceanica.xlsx", "Pyura_chilensis.xlsx", "Syncerus_caffer.xlsx", "Varroa_jacobsoni.xlsx", "Abies_alba.xlsx","Argiope_bruennichi", "Atriophallophorus_winterbourni.xlsx",  "Dracocephalum_ruyschiana.xlsx", "Entosphenus_tridentatus.xlsx", "Gadus_morhua.xlsx", "Melitaea_cinxia.xlsx", "Oncorhynchus_mykiss.xlsx", "Physeter_macrocephalus.xlsx")
+all_names_with_SpeedNe_results <- c("Ambystoma_bishopi.xlsx","Avicennia_marina.xlsx","Cameraria_ohridella.xlsx", "Carcinus_meanas.xlsx", "Cercidiphyllum_japonicum.xlsx", "Cymodocea_nodosa.xlsx", "Cystoseira_amentaceae.xlsx", "Mytilus_galloprovincialis.xlsx", "Pagophila_eburnea.xlsx", "Panthera_leo.xlsx", "Posidonia_oceanica.xlsx", "Pyura_chilensis.xlsx", "Syncerus_caffer.xlsx", "Varroa_jacobsoni.xlsx", "Abies_alba.xlsx", "Atriophallophorus_winterbourni.xlsx",  "Dracocephalum_ruyschiana.xlsx", "Entosphenus_tridentatus.xlsx", "Gadus_morhua.xlsx", "Melitaea_cinxia.xlsx", "Oncorhynchus_mykiss.xlsx", "Physeter_macrocephalus.xlsx")
 
 ######################## Load data without Ne calculations #####################################
 ################################################################################################
@@ -153,12 +153,12 @@ all_results_with_NeS_final <- all_results_with_NeS_final %>%
 ######################### plot y ~ x ###########################################################
 ################################################################################################
 # combine several plots as one plot
-par(mfrow = c(3, 4))
+par(mfrow = c(3, 4), mar = c(5, 5, 4, 2) + 0.1)
 
 # at first all methods without Ne: 
 # while looking at the plots two outliers could be detected for AMOVA (outliers were removed)
-plot(AMOVA[AMOVA < 40],  # plot EcoSim ~ AMOVA
-     EcoSim[AMOVA < 40],
+plot(AMOVA,  # plot EcoSim ~ AMOVA
+     EcoSim,
      xlab = "AMOVA",
      ylab = "Allelic Overlap", 
      cex.lab = 1.2,               
@@ -169,28 +169,28 @@ plot(lambda,              # plot EcoSim ~ lambda
      ylab= "Allelic Overlap", 
      cex.lab = 1.2,               
      cex.axis = 1)
-plot(lambda[AMOVA < 40],  # plot AMOVA ~ lambda
-     AMOVA[AMOVA < 40],
+plot(lambda,  # plot AMOVA ~ lambda
+     AMOVA,
      xlab = expression("λ"["cor"]),
      ylab = "AMOVA", 
      cex.lab = 1.2,               
      cex.axis = 1)
-plot(AvTD[AMOVA < 40],   # plot AMOVA ~ AvTD
-     AMOVA[AMOVA < 40],
-     xlab = "\u0394+",
+plot(AvTD,   # plot AMOVA ~ AvTD
+     AMOVA,
+     xlab = expression(Delta["j"]^"+"),
      ylab = "AMOVA", 
      cex.lab = 1.2,               
      cex.axis = 1)
 plot(AvTD,               # plot EcoSim ~ AvTD
      EcoSim,
-     xlab = "\u0394+",
+     xlab = expression(Delta["j"]^"+"),
      ylab = "Allelic Overlap", 
      cex.lab = 1.2,               
      cex.axis = 1)
 plot(lambda,             # plot AvTD ~ lambda
      AvTD,
      xlab = expression("λ"["cor"]),
-     ylab = "\u0394+", 
+     ylab = expression(Delta["j"]^"+"), 
      cex.lab = 1.2,               
      cex.axis = 1)
 
@@ -208,8 +208,8 @@ plot(subset(all_results_with_NeS_final, Ne <= 5000)$NeS,
      ylab = "Ne Estimator", 
      cex.lab = 1.2,               # size of axes labels
      cex.axis = 1)               
-plot(subset(all_results_with_NeS_final, Ne <= 800 & NeS <= 400)$NeS, 
-     subset(all_results_with_NeS_final, Ne <= 800 & NeS <= 400)$Ne , 
+plot(subset(all_results_with_NeS_final, Ne <= 400 & NeS <= 400)$NeS, 
+     subset(all_results_with_NeS_final, Ne <= 400 & NeS <= 400)$Ne , 
      xlab = "Speed Ne", 
      ylab = "Ne Estimator", 
      cex.lab = 1.2,               # size of axes labels
@@ -223,8 +223,8 @@ plot(subset(all_results_with_Ne_final, Ne <= 2000)$Ne,  # create a plot with NeE
      cex.lab = 1.2,               
      cex.axis = 1, 
      col= "darkgoldenrod")
-points(subset(all_results_with_NeS_final, AMOVA < 40)$NeS, # add Speed Ne results
-       subset(all_results_with_NeS_final, AMOVA < 40)$Difference, 
+points(subset(all_results_with_NeS_final, NeS <= 2000)$NeS, # add Speed Ne results
+       subset(all_results_with_NeS_final, NeS <= 2000)$Difference, 
        col = "cadetblue4")
 # define colors and labels
 colors <- c("darkgoldenrod", "cadetblue4")
@@ -273,7 +273,7 @@ legend(x = "bottomright", legend = labels, fill = colors)
 plot(subset(all_results_with_Ne_final, Ne <= 2000)$Ne,
      subset(all_results_with_Ne_final, Ne <= 2000)$AvTD,
      xlab = expression(italic("N")[italic("e")]),
-     ylab = "\u0394+", 
+     ylab = expression(Delta["j"]^"+"), 
      cex.lab = 1.2,               
      cex.axis = 1, 
      col= "darkgoldenrod") 
@@ -318,7 +318,7 @@ NeS_diversity_correlation_p_value <- NeS_diversity_correlation_test$p.value
 NeS_diversity_correlation_coefficient <- NeS_diversity_correlation_test$estimate
 
 # Test the correlation between Ne calculated with Speed-Ne and AMOVA
-NeS_Amova_correlation_test <- cor.test(as.numeric(all_results_with_NeS_final$NeS[all_results_with_NeS_final$Difference < 40]), as.numeric(all_results_with_NeS_final$Difference[all_results_with_NeS_final$Difference < 40]), method = correlation_method)
+NeS_Amova_correlation_test <- cor.test(as.numeric(all_results_with_NeS_final$NeS), as.numeric(all_results_with_NeS_final$Difference), method = correlation_method)
 # save p-value
 NeS_Amova_correlation_p_value <- NeS_Amova_correlation_test$p.value
 # save the estimated correlation coefficient
@@ -348,7 +348,7 @@ Ne_diversity_correlation_p_value <- Ne_diversity_correlation_test$p.value
 Ne_diversity_correlation_coefficient <- Ne_diversity_correlation_test$estimate
 
 # Test the correlation between Ne Estimator results and AMOVA
-Ne_Amova_correlation_test <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$Difference), method = correlation_method) # no need to clean for AMOVA < 40, because the outliers are not part of this dataset
+Ne_Amova_correlation_test <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$Difference), method = correlation_method) # 
 # save p-value
 Ne_Amova_correlation_p_value <- Ne_Amova_correlation_test$p.value
 # save the estimated correlation coefficient
@@ -378,7 +378,7 @@ diversity_Overlaps_correlation_p_value <- diversity_Overlaps_correlation_test$p.
 diversity_Overlaps_correlation_coefficient <- diversity_Overlaps_correlation_test$estimate
 
 # Test the correlation between allele diversity and rare alleles
-diversity_Amova_correlation_test <- cor.test(as.numeric(lambda[AMOVA < 40]), as.numeric(AMOVA[AMOVA < 40]), method = correlation_method)
+diversity_Amova_correlation_test <- cor.test(as.numeric(lambda), as.numeric(AMOVA), method = correlation_method)
 # save p-value
 diversity_Amova_correlation_p_value <- diversity_Amova_correlation_test$p.value
 # save the estimated correlation coefficient
@@ -387,14 +387,14 @@ diversity_Amova_correlation_coefficient <- diversity_Amova_correlation_test$esti
 # Test the correlation between rare alleles and shared alleles
 # Here I find it difficult to evaluate what is the independent variable and what is the dependent variable. 
 # You could probably look at it the other way around too.
-Amova_Overlaps_correlation_test <- cor.test(as.numeric(AMOVA[AMOVA < 40]), as.numeric(EcoSim[AMOVA < 40]), method = correlation_method) 
+Amova_Overlaps_correlation_test <- cor.test(as.numeric(AMOVA), as.numeric(EcoSim), method = correlation_method) 
 # save p-value
 Amova_Overlaps_correlation_p_value <- Amova_Overlaps_correlation_test$p.value
 # save the estimated correlation coefficient
 Amova_Overlaps_correlation_coefficient <- Amova_Overlaps_correlation_test$estimate
 
 # Test the correlation between AvTD and AMOVA looking only at sites with Ne Estimator calculated
-AvTD_AMOVA_correlation_test <- cor.test(as.numeric(AvTD[AMOVA < 40]), as.numeric(AMOVA[AMOVA < 40]) , method = correlation_method)
+AvTD_AMOVA_correlation_test <- cor.test(as.numeric(AvTD), as.numeric(AMOVA) , method = correlation_method)
 # save p-value
 AvTD_AMOVA_correlation_p_value <- AvTD_AMOVA_correlation_test$p.value
 # save the estimated correlation coefficient
@@ -434,8 +434,8 @@ correlation_matrix <- data.frame(
   NeS = c(correlation_results[9,3], correlation_results[8,3], correlation_results[10,3], correlation_results[7,3], 1, correlation_results[15,3]),
   AvTD = c(correlation_results[12,3], correlation_results[13,3], correlation_results[14,3], correlation_results[11,3], correlation_results[15,3], 1)
 )
-colnames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", "\u0394+")
-rownames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", "\u0394+")
+colnames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
+rownames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
 correlation_matrix <- as.matrix(correlation_matrix)
 
 # Create a p-value matrix
@@ -447,8 +447,8 @@ p_matrix <- data.frame(
   NeS = c(correlation_results[9,2], correlation_results[8,2], correlation_results[10,2], correlation_results[7,2], 1, correlation_results[15,2]),
   AvTD = c(correlation_results[12,2], correlation_results[13,2], correlation_results[14,2], correlation_results[11,2], correlation_results[15,2], 1)
 )
-colnames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", "\u0394+")
-rownames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", "\u0394+")
+colnames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
+rownames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
 p_matrix <- as.matrix(p_matrix)
 
 # requirement to use plot function:
