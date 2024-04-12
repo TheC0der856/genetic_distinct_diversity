@@ -129,8 +129,8 @@ for (site in unique(pull(original_file, ...2)) ) {
   
   # Transfer the significance values of the AMOVA into a list  
   AMOVA_Phi_List[[name_site]] <- AMOVA$statphi[1, "Phi"]
-  AMOVA_difference_between_sites_percent[[name_site]] <- AMOVA$componentsofcovariance[1, "%"]
-  
+  #AMOVA_difference_between_sites_percent[[name_site]] <- AMOVA$componentsofcovariance[1, "%"] no because the comparison within sample (within population) variance is irrelavant and distorts the results?
+  AMOVA_difference_between_sites_percent[[name_site]] <- AMOVA$results[1, "Sum Sq"]
 }
 
 
