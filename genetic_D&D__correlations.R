@@ -157,8 +157,8 @@ par(mfrow = c(3, 4), mar = c(5, 5, 4, 2) + 0.1)
 
 # at first all methods without Ne: 
 # while looking at the plots two outliers could be detected for AMOVA (outliers were removed)
-plot(AMOVA,  # plot EcoSim ~ AMOVA
-     EcoSim,
+plot(subset(AMOVA, AMOVA <= 40),  # plot EcoSim ~ AMOVA
+     subset(EcoSim, AMOVA <= 40),
      xlab = "AMOVA",
      ylab = "Allelic Overlap", 
      cex.lab = 1.2,               
@@ -169,14 +169,14 @@ plot(lambda,              # plot EcoSim ~ lambda
      ylab= "Allelic Overlap", 
      cex.lab = 1.2,               
      cex.axis = 1)
-plot(lambda,  # plot AMOVA ~ lambda
-     AMOVA,
+plot(subset(lambda, AMOVA <= 40),  # plot AMOVA ~ lambda
+     subset(AMOVA, AMOVA <= 40),
      xlab = expression("λ"["cor"]),
      ylab = "AMOVA", 
      cex.lab = 1.2,               
      cex.axis = 1)
-plot(AvTD,   # plot AMOVA ~ AvTD
-     AMOVA,
+plot(subset(AvTD, AMOVA <= 40),   # plot AMOVA ~ AvTD
+     subset(AMOVA, AMOVA <= 40),
      xlab = expression(Delta["j"]^"+"),
      ylab = "AMOVA", 
      cex.lab = 1.2,               
@@ -208,12 +208,13 @@ plot(subset(all_results_with_NeS_final, Ne <= 5000)$NeS,
      ylab = "Ne Estimator", 
      cex.lab = 1.2,               # size of axes labels
      cex.axis = 1)               
-plot(subset(all_results_with_NeS_final, Ne <= 400 & NeS <= 400)$NeS, 
-     subset(all_results_with_NeS_final, Ne <= 400 & NeS <= 400)$Ne , 
-     xlab = "Speed Ne", 
-     ylab = "Ne Estimator", 
-     cex.lab = 1.2,               # size of axes labels
-     cex.axis = 1)       
+# plot(subset(all_results_with_NeS_final, Ne <= 400 & NeS <= 400)$NeS, 
+#      subset(all_results_with_NeS_final, Ne <= 400 & NeS <= 400)$Ne , 
+#      xlab = "Speed Ne", 
+#      ylab = "Ne Estimator", 
+#      cex.lab = 1.2,               # size of axes labels
+#      cex.axis = 1)       
+plot.new()
 
 # Ne und AMOVA
 plot(subset(all_results_with_Ne_final, Ne <= 2000)$Ne,  # create a plot with NeEstimator results
@@ -318,7 +319,9 @@ NeS_diversity_correlation_p_value <- NeS_diversity_correlation_test$p.value
 NeS_diversity_correlation_coefficient <- NeS_diversity_correlation_test$estimate
 
 # Test the correlation between Ne calculated with Speed-Ne and AMOVA
-NeS_Amova_correlation_test <- cor.test(as.numeric(all_results_with_NeS_final$NeS), as.numeric(all_results_with_NeS_final$Difference), method = correlation_method)
+NeS_Amova_correlation_test <- cor.test(as.numeric(subset(all_results_with_NeS_final, all_results_with_NeS_final$Difference <= 40)$NeS),
+                                       as.numeric(subset(all_results_with_NeS_final, all_results_with_NeS_final$Difference <= 40)$Difference),
+                                       method = correlation_method)
 # save p-value
 NeS_Amova_correlation_p_value <- NeS_Amova_correlation_test$p.value
 # save the estimated correlation coefficient
@@ -348,7 +351,9 @@ Ne_diversity_correlation_p_value <- Ne_diversity_correlation_test$p.value
 Ne_diversity_correlation_coefficient <- Ne_diversity_correlation_test$estimate
 
 # Test the correlation between Ne Estimator results and AMOVA
-Ne_Amova_correlation_test <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$Difference), method = correlation_method) # 
+Ne_Amova_correlation_test <- cor.test(as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Ne),
+                                      as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Difference),
+                                      method = correlation_method) # 
 # save p-value
 Ne_Amova_correlation_p_value <- Ne_Amova_correlation_test$p.value
 # save the estimated correlation coefficient
@@ -378,7 +383,9 @@ diversity_Overlaps_correlation_p_value <- diversity_Overlaps_correlation_test$p.
 diversity_Overlaps_correlation_coefficient <- diversity_Overlaps_correlation_test$estimate
 
 # Test the correlation between allele diversity and rare alleles
-diversity_Amova_correlation_test <- cor.test(as.numeric(lambda), as.numeric(AMOVA), method = correlation_method)
+diversity_Amova_correlation_test <- cor.test(as.numeric(subset(lambda, AMOVA <= 40)), 
+                                             as.numeric(subset(AMOVA, AMOVA <= 40)),
+                                             method = correlation_method)
 # save p-value
 diversity_Amova_correlation_p_value <- diversity_Amova_correlation_test$p.value
 # save the estimated correlation coefficient
@@ -387,14 +394,18 @@ diversity_Amova_correlation_coefficient <- diversity_Amova_correlation_test$esti
 # Test the correlation between rare alleles and shared alleles
 # Here I find it difficult to evaluate what is the independent variable and what is the dependent variable. 
 # You could probably look at it the other way around too.
-Amova_Overlaps_correlation_test <- cor.test(as.numeric(AMOVA), as.numeric(EcoSim), method = correlation_method) 
+Amova_Overlaps_correlation_test <- cor.test(as.numeric(subset(AMOVA, AMOVA <= 40)),
+                                            as.numeric(subset(EcoSim, AMOVA <= 40)),
+                                            method = correlation_method) 
 # save p-value
 Amova_Overlaps_correlation_p_value <- Amova_Overlaps_correlation_test$p.value
 # save the estimated correlation coefficient
 Amova_Overlaps_correlation_coefficient <- Amova_Overlaps_correlation_test$estimate
 
 # Test the correlation between AvTD and AMOVA looking only at sites with Ne Estimator calculated
-AvTD_AMOVA_correlation_test <- cor.test(as.numeric(AvTD), as.numeric(AMOVA) , method = correlation_method)
+AvTD_AMOVA_correlation_test <- cor.test(as.numeric(subset(AvTD, AMOVA <= 40)),
+                                        as.numeric(subset(AMOVA, AMOVA <= 40)),
+                                        method = correlation_method)
 # save p-value
 AvTD_AMOVA_correlation_p_value <- AvTD_AMOVA_correlation_test$p.value
 # save the estimated correlation coefficient
