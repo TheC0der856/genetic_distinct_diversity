@@ -112,98 +112,35 @@ if (exists('threshold_percentage_of_missing_values_that_is_removed')) { # if the
 }  
 
 
-########################### Calculate allele frequencies ######################################
-# set a counter
-locus_index <- 0
-# and an empty dataframe
-allele_frequencies <- data.frame(locus_allel_name = character(), stringsAsFactors = FALSE)
-
-for (locus in names(Genind@all.names)) {
-  # With each loop pass over the loci, the locus_index is increased by 1 (counts at which locus is currently being calculated).
-  locus_index <- locus_index + 1
-  # allele per locus:
-  locus_allel_name <- colnames(Genind@tab)[grepl(names(Genind@all.names)[locus_index], colnames(Genind@tab))]
-  
-  # Create an empty data frame to store results:
-  # The first column in the data frame contains the names of the alleles.
-  # All further columns should later contain the allele frequencies for each population of the investigated locus.
-  # The population names are already entered as column labels of the still empty columns.
-  
-  
-  # Small information on the subject of missing values:
-  # If 0s and negative numbers are not converted into NAs the following command can be used to omit missing values (-9):
-  # locus_allel_name <- locus_allel_name[!grepl("-9", locus_allel_name)]
-  # the calculation will produce similar results like GenAlEx if you use these commands:
-  # sum_allele_frequencies_for_locus_for_pop <- colSums(allele_frequency[, -1])
-  # allele_frequency <- sweep(allele_frequency[, -1], 2, sum_allele_frequencies_for_locus_for_pop, " ")
-  # after "Add the frequencies of the allele in the population to the data frame:"
-  # Eventhough information is lost about a known allele next to a missing allele at a locus, 
-  # I decided to use missingno() to handle missing data instead of the "locus_allel_name <- locus_allel_name[!grepl("-9", locus_allel_name)]"-calculation, 
-  # because missingno() provides many options for the user and is more difficult to avoid in the AMOVA calculation (all methods should be as comparable as possible)
-  # If you want to change this Code to loose fewer information, I consider "locus_allel_name <- locus_allel_name[!grepl("-9", locus_allel_name)]" as a valid option. 
-  # Other calculation methods to handle missing values could be also inserted here e.g. the "mean" method of missingno()...
-  
-  
-  allele_frequency <- data.frame(locus_allel_name)
-  for (population in unique(Genind@pop)) {
-    name_of_column <- paste(population)
-    allele_frequency[[name_of_column]] <- 0
-  }
-  
-  # For all populations, the frequency of an allele in the population is to be calculated and stored:
-  for (population in unique(Genind@pop)) {
-    # calculate the frequency for each allele in the population:
-    allele_frequencies_for_locus_for_population <- sapply(locus_allel_name, function(locus_allel_name) {
-      allele_per_individual_in_population <- Genind@tab[Genind@pop == population, locus_allel_name]
-      sum(allele_per_individual_in_population)
-    })
-    # Add the frequencies of the allele in the population to the data frame:
-    allele_frequency[, as.character(population)] <- allele_frequencies_for_locus_for_population
-    # Rename data frame after locus name
-    assign(locus, allele_frequency)
-  }
-}
-# All created tables are merged into one large table
-for (locus in names(Genind@all.names)) {
-  # Call up data frame
-  little_allele_table <- get(locus)
-  # Add data frame to large table
-  allele_frequencies <- rbind(allele_frequencies, little_allele_table)
-}
-# Reset the row labels in the large table
-rownames(allele_frequencies) <- NULL
-
-
-# In order to use the allele frequencies for further calculations, the data must be cleaned from error sources introduced by missingno().
-# If the "mean" option is selected, rounding of the values is necessary.
-allele_frequencies <- round(allele_frequencies[-1])
-# Lines that add up to 0 must be deleted.
-row_sum_is_zero <- allele_frequencies[rowSums(allele_frequencies[-1] != 0) == 0, ]
-allele_frequencies <- allele_frequencies[!(rownames(allele_frequencies) %in% rownames(row_sum_is_zero)), ]
-
+########################### Calculate allele abundances ######################################
+# Calculate allele abundances per population 
+# default setting will calculate the mean of NA
+allele_abundances <- genind2genpop(Genind)
+allele_abundances <- t(allele_abundances@tab)
+allele_abundances <- as.data.frame(allele_abundances)
 
 ######################## Create input files for the EcoSim-R program ####################
 
 # All sites to be analysed with Overlaps: 
-sites <- colnames(allele_frequencies)
+sites <- colnames(allele_abundances)
 
 
 # Add a new TOTAL column to the table
-allele_frequencies <- allele_frequencies %>%
+allele_abundances <- allele_abundances %>%
   mutate(TOTAL = rowSums(select(.))) 
 # Fill the new column TOTAL with the sum of all allele frequencies
-allele_frequencies <- allele_frequencies %>%
+allele_abundances <- allele_abundances %>%
   mutate(TOTAL = rowSums(select(., -TOTAL)))
 
 
 # In the way I wrote this code this is a requirement for the creation of small tables - it might be possible to leave this step and find another wording for the creation of small tables.
 # Create a new column counting the examined alleles (all alleles on all loci)
 # number of alleles:
-number_of_alleles <- nrow(allele_frequencies)
+number_of_alleles <- nrow(allele_abundances)
 # create a vector with numbers from one to the number of alleles
 count_alleles <- seq(1, number_of_alleles)
 # add a new column with the counter for the rows/the number of alleles
-allele_frequencies <- allele_frequencies %>%
+allele_abundances <- allele_abundances %>%
   mutate(count_alleles)
 
 
@@ -214,7 +151,7 @@ for (site in sites) {
   # All tables should be saved in the folder "EcoSim_files"
   file_path <- file.path(output_folder_path, paste0(site, ".csv"))
   # The tables should consist of the counter for the number of alleles, the site, and the sum of the rest of the sites respectively all sites minus the site
-  input_file_for_EcoSim_site_vs_rest <- allele_frequencies %>%
+  input_file_for_EcoSim_site_vs_rest <- allele_abundances %>%
     select(count_alleles, {{site}}, TOTAL = TOTAL) %>%
     mutate(!!paste0("TOTAL_minus_", site) := TOTAL - .data[[site]]) %>%
     select(-TOTAL)
