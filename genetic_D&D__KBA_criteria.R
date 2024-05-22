@@ -202,69 +202,76 @@ all_thresholds_met <- rbind(all_thresholds_met, thresholds_met)
 #lamda: Nothing: 7/ A1b: 235/ B1, A1b: 97
 #NeS: I: 59/ Nothing: 11/ VI: 116/ NA: 153
 #NeE: I: 116 / Nothing: 37 / VI: 99 / NA: 87
-par(mfrow = c(2, 4))
 
-pie(table(all_thresholds_met$amova),
-    main = "AMOVA", 
-    labels = rep("", length(table(all_thresholds_met$NeE))),
-    col=c("cornsilk1", "lightskyblue1", "salmon3"))
+ggplot()+
+       geom_bar(data = as.data.frame(table(all_thresholds_met$amova)), 
+                aes(x = -0.2, y = Freq, fill = Var1),
+                stat = "identity", 
+                color = "black",
+                size = 0.5, 
+                width = 0.08)+
+       geom_bar(data = as.data.frame(table(all_thresholds_met$Eco)), 
+                aes(x = -0.1, y = Freq, fill = Var1),
+                stat = "identity", 
+                color = "black",
+                size = 0.5, 
+                width = 0.08) +
+       geom_bar(data = as.data.frame(table(all_thresholds_met$lamda)), 
+                aes(x = 0, y = Freq, fill = Var1),
+                stat = "identity", 
+                color = "black",
+                size = 0.5, 
+                width = 0.08) +
+       geom_bar(data = as.data.frame(table(all_thresholds_met$AvTD)), 
+               aes(x = 0.1, y = Freq, fill = Var1),
+               stat = "identity", 
+               color = "black",
+               size = 0.5, 
+               width = 0.08) +
+      geom_bar(data = as.data.frame(table(all_thresholds_met$NeE)), 
+              aes(x = 0.2, y = Freq, fill = Var1),
+              stat = "identity", 
+              color = "black",
+              size = 0.5, 
+              width = 0.08) +
+      geom_bar(data = as.data.frame(table(all_thresholds_met$NeE)), 
+              aes(x = 0.3, y = Freq, fill = Var1),
+              stat = "identity", 
+              color = "black",
+              size = 0.5, 
+              width = 0.08) +
+      scale_fill_manual(values = c("cornsilk1", "lightskyblue1", "salmon3"),
+                        name = "KBA criteria", 
+                        labels = c("≥ 1% (A1b)", "≥ 10% (B1 & A1b)", "no protection")) +
+      xlab("method") +
+      ylab("abundance") + 
+      labs(title = NULL)  +
+      theme(
+         legend.position = "bottom", 
+         panel.background = element_rect(fill = "white", color = NA), 
+         plot.background = element_rect(fill = "white", color = NA),  
+         panel.grid.major = element_blank(),  
+         panel.grid.minor = element_blank(), 
+         axis.text.x = element_text(angle = 90, 
+                                    hjust = 0.5, 
+                                    vjust = 0.5, 
+                                    size = 15),
+         axis.line.x = element_line(color = "black", size = 0.5),
+         axis.title.x = element_text(size = 19, face = "bold", 
+                                     margin = margin(t = 20, r = 0, b = 0, l = 0)),
+         axis.ticks.length = unit(0.25, "cm"),
+         axis.text.y = element_text(size = 15),
+         axis.line.y = element_line(color = "black", size = 0.5),
+         axis.title.y = element_text(size = 19, face = "bold", 
+                                     margin = margin(t = 0, r = 20, b = 0, l = 0)), 
+         plot.margin = margin(20, 20, 10, 5)) +
+      scale_x_continuous(breaks = seq(-0.2, 0.3, by = 0.1), 
+                         labels = c("AMOVA", 
+                                    "Allelic Overlap",
+                                    expression("λ"["cor"]), 
+                                    expression(Delta["j"]^"+"), 
+                                    "Ne Estimator",
+                                    "Speed Ne")) 
+      
 
-# legend("topright", legend = c("A1b > 1%" , "B1 > 10%", "no protection"), 
-#        fill = c("cornsilk1", "lightskyblue1", "salmon3"))
-
-
-pie(table(all_thresholds_met$Eco),
-    main = "Allelic Overlap", 
-    labels = rep("", length(table(all_thresholds_met$NeE))),
-    col=c("cornsilk1", "lightskyblue1"))
-
-#legend("topright", legend = c("A1b > 1%" , "B1 > 10%"))
-
-
-pie(table(all_thresholds_met$lamda),
-    main = expression(bold("λ"["cor"])), 
-    labels = rep("", length(table(all_thresholds_met$NeE))),
-    col=c("cornsilk1", "lightskyblue1", "salmon3"))
-
-#legend("topright", legend = c("A1b > 1%" , "B1 > 10%"))
-
-pie(table(all_thresholds_met$AvTD),
-    main = expression(bold(Delta["j"]^"+")), 
-    labels = rep("", length(table(all_thresholds_met$NeE))),
-    col=c("cornsilk1", "lightskyblue1", "salmon3"))
-
-#legend("topright", legend = c("A1b > 1%" , "B1 > 10%"))
-
-
-pie(table(all_thresholds_met$NeE, useNA = "ifany"),
-    #labels = c(expression(italic(N)[italic("e")] < 50), 
-    #           expression(italic(N)[italic("e")] < 500), 
-    #           "no protection",
-    #           "missing information"),
-    main = "Ne Estimator", 
-    labels = rep("", length(table(all_thresholds_met$NeE))),
-    col=c( "cornsilk1", "lightskyblue1", "salmon3", "white"))
-
-
-pie(table(all_thresholds_met$NeS, useNA = "ifany"),
-    #labels = c(expression(italic(N)[italic("e")] < 50), 
-    #           expression(italic(N)[italic("e")] < 500), 
-    #           "no protection",
-    #           "missing information"),
-    main = "Speed Ne",
-    labels = rep("", length(table(all_thresholds_met$NeE))),
-    col=c("cornsilk1", "lightskyblue1", "salmon3", "white"))
-
-plot.new()
-plot.new()
-par(xpd = TRUE) 
-legend("center",
-       legend = c("> 1% (A1b)" ,
-                  "> 10% (B1, A1b)",
-                  "no protection"),
-                  #expression(italic(N)[italic("e")] < 500),
-                  #expression(italic(N)[italic("e")] < 50),
-                  #"missing information"), 
-        fill = c("cornsilk1", "lightskyblue1", "salmon3", "lightgoldenrod","royalblue4", "white"), 
-        cex = 1.3)
 
