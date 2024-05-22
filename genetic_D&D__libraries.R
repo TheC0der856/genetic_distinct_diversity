@@ -32,3 +32,6 @@ if(!require('RLDNe')) {       # enables using NeEstimatorV2.1 (Do et al. 2014) i
   install.packages("devtools")   # install devtools to use the installation link to NeEstimator
   devtools::install_github(repo="zakrobinson/RLDNe")
 }
+if(!require('ggplot2')) {
+  install.packages('ggplot2')  # used in KBA script to display data
+}
