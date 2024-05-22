@@ -264,7 +264,9 @@ ggplot()+
          axis.line.y = element_line(color = "black", size = 0.5),
          axis.title.y = element_text(size = 19, face = "bold", 
                                      margin = margin(t = 0, r = 20, b = 0, l = 0)), 
-         plot.margin = margin(20, 20, 10, 5)) +
+         plot.margin = margin(20, 20, 10, 5), 
+         legend.title= element_text(size= 14),
+         legend.text= element_text(size= 13)) +
       scale_x_continuous(breaks = seq(-0.2, 0.3, by = 0.1), 
                          labels = c("AMOVA", 
                                     "Allelic Overlap",
