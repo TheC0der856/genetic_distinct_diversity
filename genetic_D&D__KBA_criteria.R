@@ -46,7 +46,7 @@ for (dataset in datasets) {
         amova$percentage[i] <- (amova$Difference[i] / sum_Difference) * 100
       }
       # add a row to the table if the threshold was met
-      amova$threshold_met <- ifelse(amova$percentage > 10, "B1, A1b", ifelse(amova$percentage > 1, "A1b", "no protection"))
+      amova$threshold_met <- ifelse(amova$percentage >= 10, "B1, A1b", ifelse(amova$percentage >= 1, "A1b", "no protection"))
       
       
       lamda <- read.csv(file= paste("Results_", dataset, "/diversity/diversity_results.csv", sep = ""))
@@ -60,13 +60,13 @@ for (dataset in datasets) {
         lamda$percentage[i] <- (lamda$X.N..N...1.....lambda[i] / sum) * 100
       }
       # add a row to the table if the threshold was met
-      lamda$threshold_met <- ifelse(lamda$percentage > 10, "B1, A1b", ifelse(lamda$percentage > 1, "A1b", "no protection"))
+      lamda$threshold_met <- ifelse(lamda$percentage >= 10, "B1, A1b", ifelse(lamda$percentage >= 1, "A1b", "no protection"))
       
       
       Eco <- read.csv(file= paste("Results_",dataset,"/Overlaps/Overlaps_results.csv", sep=""))
       # create a table like in the descriptions of the KBA standard
       # add a row to the table if the threshold was met
-      Eco$threshold_met <- ifelse(Eco$observed_overlap_percentages > 10, "B1, A1b", ifelse(Eco$observed_overlap_percentages > 1, "A1b", "no protection"))
+      Eco$threshold_met <- ifelse(Eco$observed_overlap_percentages >= 10, "B1, A1b", ifelse(Eco$observed_overlap_percentages >= 1, "A1b", "no protection"))
       
       AvTD <- read.csv(file= paste("Results_", dataset, "/AvTD/AvTD_results.csv", sep = ""))
       # create a table like in the descriptions of the KBA standard
@@ -79,7 +79,7 @@ for (dataset in datasets) {
         AvTD$percentage[i] <- (AvTD$Delta..1[i] / sum) * 100
       }
       # add a row to the table if the threshold was met
-      AvTD$threshold_met <- ifelse(AvTD$percentage > 10, "B1, A1b", ifelse(AvTD$percentage > 1, "A1b", "no protection"))
+      AvTD$threshold_met <- ifelse(AvTD$percentage >= 10, "B1, A1b", ifelse(AvTD$percentage >= 1, "A1b", "no protection"))
       
     
       NeE <- read.csv(file= paste("Results_", dataset, "/NeEstimator/Ne_results.csv", sep = ""))
@@ -118,8 +118,8 @@ for (dataset in datasets) {
       }
         
       # add a row to the table if the threshold was met
-      NeE$threshold_met <- ifelse(NeE$percentage > 10, "B1, A1b",
-                                  ifelse(NeE$percentage > 1, "A1b", "no protection"))
+      NeE$threshold_met <- ifelse(NeE$percentage >= 10, "B1, A1b",
+                                  ifelse(NeE$percentage >= 1, "A1b", "no protection"))
       
       
       
@@ -165,8 +165,8 @@ for (dataset in datasets) {
       }
       
       # add a row to the table if the threshold was met
-      NeS$threshold_met <- ifelse(NeS$percentage > 10, "B1, A1b",
-                                  ifelse(NeS$percentage > 1, "A1b", "no protection"))
+      NeS$threshold_met <- ifelse(NeS$percentage >= 10, "B1, A1b",
+                                  ifelse(NeS$percentage >= 1, "A1b", "no protection"))
       
       # Combine threshold met information!
       thresholds_met <- data.frame(
