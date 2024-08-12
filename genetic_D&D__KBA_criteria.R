@@ -234,7 +234,7 @@ ggplot()+
               color = "black",
               size = 0.5, 
               width = 0.08) +
-      geom_bar(data = as.data.frame(table(all_thresholds_met$NeE)), 
+      geom_bar(data = as.data.frame(table(all_thresholds_met$NeS)), 
               aes(x = 0.3, y = Freq, fill = Var1),
               stat = "identity", 
               color = "black",
@@ -275,5 +275,3 @@ ggplot()+
                                     "Ne Estimator",
                                     "Speed Ne")) 
       
-
-
