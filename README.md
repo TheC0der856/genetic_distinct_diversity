@@ -14,14 +14,14 @@ The next step is tp create an R project and start with opening genetic_D&D__Main
 
 
 
-
+#########################################################################
 R Markdown (help page): 
 
 
 The script creating the help page is called How_to_AvTD.R
 
 
-
+#########################################################################
 Distinct Genetic Diversity App to identify KBAs:
 
 The app is made up of two scripts: ShinyV17.R and calculate_DGD_function.R. calculate_DGD_function.R contains calcultions from reading in data to identify KBAs which are explained in How_to_AvTD.R. ShinyV17.R is creating the user interface. All other files in the folder App are example files that the App offers for download. References of the files can be seen by hoovering over the info point after executing tha app or within the ShinyV17.R script. The folder WWW contains images used by the App. 
