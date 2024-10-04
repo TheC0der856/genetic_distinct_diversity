@@ -204,37 +204,37 @@ all_thresholds_met <- rbind(all_thresholds_met, thresholds_met)
 #NeE: I: 116 / Nothing: 37 / VI: 99 / NA: 87
 
 ggplot()+
-       geom_bar(data = as.data.frame(table(all_thresholds_met$amova)), 
+       geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$amova))*100), 
                 aes(x = -0.2, y = Freq, fill = Var1),
                 stat = "identity", 
                 color = "black",
                 size = 0.5, 
                 width = 0.08)+
-       geom_bar(data = as.data.frame(table(all_thresholds_met$Eco)), 
+       geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$Eco))*100), 
                 aes(x = -0.1, y = Freq, fill = Var1),
                 stat = "identity", 
                 color = "black",
                 size = 0.5, 
                 width = 0.08) +
-       geom_bar(data = as.data.frame(table(all_thresholds_met$lamda)), 
+       geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$lamda))*100), 
                 aes(x = 0, y = Freq, fill = Var1),
                 stat = "identity", 
                 color = "black",
                 size = 0.5, 
                 width = 0.08) +
-       geom_bar(data = as.data.frame(table(all_thresholds_met$AvTD)), 
+       geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$AvTD))*100), 
                aes(x = 0.1, y = Freq, fill = Var1),
                stat = "identity", 
                color = "black",
                size = 0.5, 
                width = 0.08) +
-      geom_bar(data = as.data.frame(table(all_thresholds_met$NeE)), 
+      geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$NeE))*100), 
               aes(x = 0.2, y = Freq, fill = Var1),
               stat = "identity", 
               color = "black",
               size = 0.5, 
               width = 0.08) +
-      geom_bar(data = as.data.frame(table(all_thresholds_met$NeS)), 
+      geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$NeS))*100), 
               aes(x = 0.3, y = Freq, fill = Var1),
               stat = "identity", 
               color = "black",
@@ -244,7 +244,7 @@ ggplot()+
                         name = "KBA criteria", 
                         labels = c("≥ 1% (A1b)", "≥ 10% (B1 & A1b)", "no protection")) +
       xlab("method") +
-      ylab("abundance") + 
+      ylab("proportion of fulfilled criteria [%]") + 
       labs(title = NULL)  +
       theme(
          legend.position = "bottom", 
@@ -272,6 +272,8 @@ ggplot()+
                                     "Allelic Overlap",
                                     expression("λ"["cor"]), 
                                     expression(Delta["j"]^"+"), 
-                                    "Ne Estimator",
-                                    "Speed Ne")) 
+                                    "NᴇEsᴛɪᴍᴀᴛᴏʀ",
+                                    "Sᴘᴇᴇᴅ-Nᴇ")) 
       
+
+write.csv(all_thresholds_met, "KBA.csv")
