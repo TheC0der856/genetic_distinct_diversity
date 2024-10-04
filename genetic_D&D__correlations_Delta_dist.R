@@ -259,8 +259,8 @@ for(i in 1:nrow(corr_all_dist))  {
   # column names
   DnD_methods_without_Delta <- c(expression(bold("AMOVA")), 
                                  expression(bold("λ"["cor"])),
-                                 expression(bold("Ne Estimator")), 
-                                 expression(bold("Speed Ne")), 
+                                 expression(bold("NᴇEsᴛɪᴍᴀᴛᴏʀ")), 
+                                 expression(bold("Sᴘᴇᴇᴅ-Nᴇ")), 
                                  expression(bold("Allelic Overlap")))
   plot(1,
        type="n",
