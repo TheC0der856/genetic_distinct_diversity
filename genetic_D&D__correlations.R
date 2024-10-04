@@ -204,8 +204,8 @@ plot(lambda,             # plot AvTD ~ lambda
 #NeS and NeE
 plot(subset(all_results_with_NeS_final, Ne <= 5000)$NeS, 
      subset(all_results_with_NeS_final, Ne <= 5000)$Ne , 
-     xlab = "Speed Ne", 
-     ylab = "Ne Estimator", 
+     xlab = "Sᴘᴇᴇᴅ-Nᴇ", 
+     ylab = "NᴇEsᴛɪᴍᴀᴛᴏʀ", 
      cex.lab = 1.2,               # size of axes labels
      cex.axis = 1)               
 # plot(subset(all_results_with_NeS_final, Ne <= 400 & NeS <= 400)$NeS, 
@@ -229,7 +229,7 @@ points(subset(all_results_with_NeS_final, NeS <= 2000)$NeS, # add Speed Ne resul
        col = "cadetblue4")
 # define colors and labels
 colors <- c("darkgoldenrod", "cadetblue4")
-labels <- c("Ne Estimator", "Speed Ne")
+labels <- c("NᴇEsᴛɪᴍᴀᴛᴏʀ", "Speed Ne")
 # add legend
 legend(x = "topright", legend = labels, fill = colors)
 
@@ -248,7 +248,7 @@ points(all_results_with_NeS_final$NeS,
        lwd = 1.9) 
 # define colors and labels
 colors <- c("darkgoldenrod", "cadetblue4")
-labels <- c("Ne Estimator", "Speed Ne")
+labels <- c("NᴇEsᴛɪᴍᴀᴛᴏʀ", "Sᴘᴇᴇᴅ-Nᴇ")
 # add legend
 legend(x = "bottomright", legend = labels, fill = colors)
 
@@ -266,7 +266,7 @@ points(subset(all_results_with_NeS_final, NeS <= 100)$NeS,
        col = "cadetblue4")
 # define colors and labels
 colors <- c("darkgoldenrod", "cadetblue4")
-labels <- c("Ne Estimator", "Speed Ne")
+labels <- c("NᴇEsᴛɪᴍᴀᴛᴏʀ", "Sᴘᴇᴇᴅ-Nᴇ")
 # add legend
 legend(x = "bottomright", legend = labels, fill = colors)
 
@@ -284,7 +284,7 @@ points(all_results_with_NeS_final$NeS,
        col = "cadetblue4")
 # define colors and labels
 colors <- c("darkgoldenrod", "cadetblue4")
-labels <- c("Ne Estimator", "Speed Ne")
+labels <- c("NᴇEsᴛɪᴍᴀᴛᴏʀ", "Sᴘᴇᴇᴅ-Nᴇ")
 # add legend
 legend(x = "bottomright", legend = labels, fill = colors)
 
@@ -430,9 +430,21 @@ AvTD_overlap_correlation_coefficient <- AvTD_overlap_correlation_test$estimate
 ################# Create a correlations plot ################################################################
 # Create a table with correlation test results
 correlation_results <- data.frame(
-  tested_methods = c("Ne_diversity", "Ne_Amova", "Ne_Overlaps", "diversity_Overlaps", "diversity_Amova", "Amova_Overlaps", "NeS_Ne", "NeS_diversity", "NeS_Amova", "NeS_Overlaps", "Ne_AvTD", "AvTD_AMOVA", "diversity_AvTD", "AvTD_Overlaps", "NeS_AvTD"),
-  p_value = c(Ne_diversity_correlation_p_value, Ne_Amova_correlation_p_value, Ne_Overlaps_correlation_p_value, diversity_Overlaps_correlation_p_value, diversity_Amova_correlation_p_value, Amova_Overlaps_correlation_p_value, NeS_Ne_correlation_p_value, NeS_diversity_correlation_p_value, NeS_Amova_correlation_p_value, NeS_Overlaps_correlation_p_value, Ne_AvTD_correlation_p_value , AvTD_AMOVA_correlation_p_value, diversity_AvTD_correlation_p_value, AvTD_overlap_correlation_p_value, NeS_AvTD_correlation_p_value),  
-  correlation_coefficient = c(Ne_diversity_correlation_coefficient, Ne_Amova_correlation_coefficient, Ne_Overlaps_correlation_coefficient, diversity_Overlaps_correlation_coefficient, diversity_Amova_correlation_coefficient, Amova_Overlaps_correlation_coefficient, NeS_Ne_correlation_coefficient, NeS_diversity_correlation_coefficient, NeS_Amova_correlation_coefficient, NeS_Overlaps_correlation_coefficient, Ne_AvTD_correlation_coefficient, AvTD_AMOVA_correlation_coefficient, diversity_AvTD_correlation_coefficient, AvTD_overlap_correlation_coefficient, NeS_AvTD_correlation_coefficient)
+  tested_methods = c("Ne_diversity", "Ne_Amova", "Ne_Overlaps",
+                     "diversity_Overlaps", "diversity_Amova", "Amova_Overlaps", 
+                     "NeS_Ne", "NeS_diversity", "NeS_Amova",
+                     "NeS_Overlaps", "Ne_AvTD", "AvTD_AMOVA", 
+                     "diversity_AvTD", "AvTD_Overlaps", "NeS_AvTD"),
+  p_value = c(Ne_diversity_correlation_p_value, Ne_Amova_correlation_p_value, Ne_Overlaps_correlation_p_value, 
+              diversity_Overlaps_correlation_p_value, diversity_Amova_correlation_p_value, Amova_Overlaps_correlation_p_value, 
+              NeS_Ne_correlation_p_value, NeS_diversity_correlation_p_value, NeS_Amova_correlation_p_value, 
+              NeS_Overlaps_correlation_p_value, Ne_AvTD_correlation_p_value , AvTD_AMOVA_correlation_p_value, 
+              diversity_AvTD_correlation_p_value, AvTD_overlap_correlation_p_value, NeS_AvTD_correlation_p_value),  
+  correlation_coefficient = c(Ne_diversity_correlation_coefficient, Ne_Amova_correlation_coefficient, Ne_Overlaps_correlation_coefficient, 
+                              diversity_Overlaps_correlation_coefficient, diversity_Amova_correlation_coefficient, Amova_Overlaps_correlation_coefficient, 
+                              NeS_Ne_correlation_coefficient, NeS_diversity_correlation_coefficient, NeS_Amova_correlation_coefficient, 
+                              NeS_Overlaps_correlation_coefficient, Ne_AvTD_correlation_coefficient, AvTD_AMOVA_correlation_coefficient, 
+                              diversity_AvTD_correlation_coefficient, AvTD_overlap_correlation_coefficient, NeS_AvTD_correlation_coefficient)
 )
 
 # Create matrices for correlation results with Ne
@@ -445,8 +457,8 @@ correlation_matrix <- data.frame(
   NeS = c(correlation_results[9,3], correlation_results[8,3], correlation_results[10,3], correlation_results[7,3], 1, correlation_results[15,3]),
   AvTD = c(correlation_results[12,3], correlation_results[13,3], correlation_results[14,3], correlation_results[11,3], correlation_results[15,3], 1)
 )
-colnames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
-rownames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
+colnames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "NᴇEsᴛɪᴍᴀᴛᴏʀ", "Sᴘᴇᴇᴅ-Nᴇ", ":Δ[j]^'+'")
+rownames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "NᴇEsᴛɪᴍᴀᴛᴏʀ", "Sᴘᴇᴇᴅ-Nᴇ", ":Δ[j]^'+'")
 correlation_matrix <- as.matrix(correlation_matrix)
 
 # Create a p-value matrix
@@ -458,8 +470,8 @@ p_matrix <- data.frame(
   NeS = c(correlation_results[9,2], correlation_results[8,2], correlation_results[10,2], correlation_results[7,2], 1, correlation_results[15,2]),
   AvTD = c(correlation_results[12,2], correlation_results[13,2], correlation_results[14,2], correlation_results[11,2], correlation_results[15,2], 1)
 )
-colnames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
-rownames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "Ne Estimator", "Speed Ne", ":Δ[j]^'+'")
+colnames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "NᴇEsᴛɪᴍᴀᴛᴏʀ", "Speed Ne", ":Δ[j]^'+'")
+rownames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", "NᴇEsᴛɪᴍᴀᴛᴏʀ", "Sᴘᴇᴇᴅ-Nᴇ", ":Δ[j]^'+'")
 p_matrix <- as.matrix(p_matrix)
 
 # requirement to use plot function:
