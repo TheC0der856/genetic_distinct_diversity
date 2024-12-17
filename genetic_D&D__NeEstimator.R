@@ -136,64 +136,63 @@ param_files<- NeV2_LDNe_create(input_file = gp_file$Output_File ,param_file = "N
 run_LDNe(LDNe_params = param_files$param_file)
 Ne_estimates<-readLDNe_tab(path = param_files$Ne_out_tab)
   
-#  old idea to replace negative values with a mean. 
-#  
-# # Ne output will be saved as "Ne_outxLD.txt"
-# # load Ne output into R
-# Ne_output_txt <- readLines("Ne_outxLD.txt")
-# Ne_output_txt <- gsub("Infinite", "Inf", Ne_output_txt) # Inf will always interpreted as positive even if it is not
-# 
-# 
-# # create an empty data frame to save Ne for every site
-# Ne_R_results <- data.frame(
-#   site = character(0),
-#   Ne = numeric(0),
-#   lower_jackknife_confidence_interval = numeric(0),  #we recommend the general use of the jackknife CIs, particularly when the number of loci is large (>100) NeEstimatorV2.1 Help file
-#   upper_jackknife_confidence_interval = numeric(0)
-# )
-# 
-# # at line 16 the first site starts (have a look at sample size at .txt- document) 
-# # with the lowest allele frequency of 0.1
-# # I would like to take all allele frequencies into account no matter how low they were
-# # for this reason my Nes have higher numbers than calculation with a restrinction in allele frequencies
-# # I decided to do so, because I do not have any lower limit for the other calculations as well.
-# # (page 22 "Critical Values" of help file NeEstimator2.1)
-# 
-# # at line 19 we have the results of the first site without any allele frequency restrictions.
-# # at line 17 we have a threshold of 0.05
-# counter <- 17 
-# for (site in unique(Ne_Estimator_file$pop)) {
-#   # simplify reading the important lines
-#   line_of_Ne_output_text <- strsplit(Ne_output_txt[counter], " ")[[1]]
-#   just_numbers <- line_of_Ne_output_text[line_of_Ne_output_text != ""]
-#   # search for the important numbers
-#   Ne <- as.numeric(unlist(just_numbers)[6])
-#   lower_jackknife_confidence_interval <- as.numeric(unlist(just_numbers)[9]) 
-#   upper_jackknife_confidence_interval <- as.numeric(unlist(just_numbers)[10])
-#   lower_parametric_confidence_interval <- as.numeric(unlist(just_numbers)[7])
-#   upper_parametric_confidence_interval <- as.numeric(unlist(just_numbers)[8])
-#   
-#   # move on to the next site
-#   counter <- counter+4 
-#   # transfer the important numbers into a data frame
-#   Ne_R_results <- rbind(Ne_R_results, data.frame(site = site, Ne = Ne, lower_jackknife_confidence_interval = lower_jackknife_confidence_interval, upper_jackknife_confidence_interval = upper_jackknife_confidence_interval, lower_parametric_confidence_interval = lower_parametric_confidence_interval, upper_parametric_confidence_interval = upper_parametric_confidence_interval))
-# }
-# 
-# # recognize if Inf is a negative value
-# for (index in 1:length(Ne_R_results$site)) {
-#   if (Ne_R_results[index, 2] < Ne_R_results[index, 3] && Ne_R_results[index, 4] == Inf) {
-#     Ne_R_results[index, 4] <- -Inf
-#   }
-# }
-# 
-# # delete negative values 
-# if (any(Ne_R_results$Ne < 0)) {
-#   Ne_R_results <- Ne_R_results[Ne_R_results$Ne >= 0, ]
-# }
-# 
-# # save results as a .csv- file
-# # make sure the final results are saved in the correct folder
-# write.csv(Ne_R_results, file = "Ne_results.csv", row.names = FALSE)
+
+ 
+# Ne output will be saved as "Ne_outxLD.txt"
+# load Ne output into R
+Ne_output_txt <- readLines("Ne_outxLD.txt")
+Ne_output_txt <- gsub("Infinite", "Inf", Ne_output_txt) # Inf will always interpreted as positive even if it is not
+ 
+# create an empty data frame to save Ne for every site
+Ne_R_results <- data.frame(
+  site = character(0),
+  Ne = numeric(0),
+  lower_jackknife_confidence_interval = numeric(0),  #we recommend the general use of the jackknife CIs, particularly when the number of loci is large (>100) NeEstimatorV2.1 Help file
+  upper_jackknife_confidence_interval = numeric(0)
+)
+
+# at line 16 the first site starts (have a look at sample size at .txt- document) 
+# with the lowest allele frequency of 0.1
+# I would like to take all allele frequencies into account no matter how low they were
+# for this reason my Nes have higher numbers than calculation with a restrinction in allele frequencies
+# I decided to do so, because I do not have any lower limit for the other calculations as well.
+# (page 22 "Critical Values" of help file NeEstimator2.1)
+ 
+# at line 19 we have the results of the first site without any allele frequency restrictions.
+# at line 17 we have a threshold of 0.05
+counter <- 17 
+for (site in unique(Ne_Estimator_file$pop)) {
+  # simplify reading the important lines
+  line_of_Ne_output_text <- strsplit(Ne_output_txt[counter], " ")[[1]]
+  just_numbers <- line_of_Ne_output_text[line_of_Ne_output_text != ""]
+  # search for the important numbers
+  Ne <- as.numeric(unlist(just_numbers)[6])
+  lower_jackknife_confidence_interval <- as.numeric(unlist(just_numbers)[9]) 
+  upper_jackknife_confidence_interval <- as.numeric(unlist(just_numbers)[10])
+  lower_parametric_confidence_interval <- as.numeric(unlist(just_numbers)[7])
+  upper_parametric_confidence_interval <- as.numeric(unlist(just_numbers)[8])
+  
+  # move on to the next site
+  counter <- counter+4 
+  # transfer the important numbers into a data frame
+  Ne_R_results <- rbind(Ne_R_results, data.frame(site = site, Ne = Ne, lower_jackknife_confidence_interval = lower_jackknife_confidence_interval, upper_jackknife_confidence_interval = upper_jackknife_confidence_interval, lower_parametric_confidence_interval = lower_parametric_confidence_interval, upper_parametric_confidence_interval = upper_parametric_confidence_interval))
+}
+ 
+# recognize if Inf is a negative value
+for (index in 1:length(Ne_R_results$site)) {
+  if (Ne_R_results[index, 2] < Ne_R_results[index, 3] && Ne_R_results[index, 4] == Inf) {
+    Ne_R_results[index, 4] <- -Inf
+  }
+}
+ 
+# delete negative values 
+if (any(Ne_R_results$Ne < 0)) {
+   Ne_R_results <- Ne_R_results[Ne_R_results$Ne >= 0, ]
+}
+ 
+# save results as a .csv- file
+# make sure the final results are saved in the correct folder
+write.csv(Ne_R_results, file = "Ne_results.csv", row.names = FALSE)
 
 # go back to the directory of the project, to enable running other scripts after this script
 setwd("..")
