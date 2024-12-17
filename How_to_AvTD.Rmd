@@ -92,8 +92,8 @@ The best option to calculate genetic distances is to use the function taxa2dist(
 # switch columns and rows
 t_allele_abundances <- t(allele_abundances)
 
-# calculate genetic distances from a classification table with variable step lengths
-taxdis <- taxa2dist(t_allele_abundances, varstep=TRUE)
+# calculate genetic distances
+taxdis <- taxa2dist(t_allele_abundances)
 
 ```
 ## calculate Distinct Genetic Diversity
