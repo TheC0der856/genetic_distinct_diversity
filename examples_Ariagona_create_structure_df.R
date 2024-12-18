@@ -128,6 +128,7 @@ coordinate_cluster <- coordinate_cluster %>%
 
 
 # add KBAs information to Ariagona_cluster
+
 KBA <- data.frame(
   WGS84_X = c(-16.1570, # east Anaga
               -16.2771, # west Anaga
@@ -158,14 +159,14 @@ cols_to_calculate <- c("amova", "lamda", "AvTD", "NeE")
 for (col in cols_to_calculate) {
   KBA[[paste0(col)]] <- (KBA[[col]] / sum(KBA[[col]])) * 100
 }
-KBA[] <- lapply(KBA, function(col) {
-  if (is.numeric(col)) { 
-    col <- ifelse(col < 10, 0, "B1") 
+KBA[] <- lapply(names(KBA), function(col_name) {
+  if (col_name != "WGS84_X" && is.numeric(KBA[[col_name]])) {
+    KBA[[col_name]] <- ifelse(KBA[[col_name]] < 10, 0, "B1")
   }
-  return(col)
+  return(KBA[[col_name]])
 })
 all <- merge(KBA, coordinate_cluster, by = "WGS84_X", all = TRUE)
 
 
 
-write.csv(coordinate_cluster, "C:/Users/Gronefeld/Desktop/D&D_examples/Ariagona_example/Ariagona_KBA_cluster.csv")
+write.csv(all, "C:/Users/Gronefeld/Desktop/D&D_examples/Ariagona_example/Ariagona_KBA_cluster.csv")
