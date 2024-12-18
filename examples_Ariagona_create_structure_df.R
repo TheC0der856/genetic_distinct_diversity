@@ -128,19 +128,31 @@ coordinate_cluster <- coordinate_cluster %>%
 
 
 # add KBAs information to Ariagona_cluster
-
 KBA <- data.frame(
-  WGS84_X = c(-16.1570, -16.2771, -16.4023, -16.4930, -16.7018,
-              -16.7851, -16.8812, -17.9182, -18.0750, -18.1204),
+  WGS84_X = c(-16.1570, # east Anaga
+              -16.2771, # west Anaga
+              -16.4023, # las Lagunetas
+              -16.4930, # Aguamansa
+              -16.7018, # Icod
+              -16.7851, # San José de los Llanos
+              -16.8812, # Teno Alto
+              -17.9182, # eastern El Hierro
+              -18.0750, # Derrabado
+              -18.1204),# western El Hierro
   amova = c(4769.26148981956, 4601.89951554838, 6601.67818863055, 4379.79938718167, 6000.06217430043,
             5549.56560172666, 5893.93230942145, 13589.2140489209, 22395.5376386461, 13853.7658827775),
   lamda = c(1, 1, 1, 1, 1, 
             1, 1, 1, 1, 1),
   AvTD = c(87.0765119664933, 86.3898959381409, 88.5618134555291, 88.29389856533, 87.4807115441051,
            88.1168349293304, 86.400351274029, 86.8613313433588, 88.2103181008796, 86.3423454289828),
-  NeE = c(Inf, Inf, 9, 88.8, 2.4, 
-          2, Inf, Inf, Inf, Inf)
+  NeE = c(-21.3, -111.2, 2.9, 32.7, -29.8, 
+          2.7, 1.6, -17.7, -11.0, -17.4)
 )
+
+# change all NeE into positive values!
+for (i in 1:nrow(KBA)) {
+  KBA$NeE[i] <- KBA$NeE[i] + 112
+}
 
 cols_to_calculate <- c("amova", "lamda", "AvTD", "NeE")
 for (col in cols_to_calculate) {
