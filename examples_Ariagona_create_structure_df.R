@@ -164,8 +164,8 @@ KBA[] <- lapply(KBA, function(col) {
   }
   return(col)
 })
-all <- merge(KBA, coordinate_cluster, by = "V2", all = TRUE)
+all <- merge(KBA, coordinate_cluster, by = "WGS84_X", all = TRUE)
 
 
 
-write.csv(coordinate_cluster, "Ariagona_cluster.csv")
+write.csv(coordinate_cluster, "C:/Users/Gronefeld/Desktop/D&D_examples/Ariagona_example/Ariagona_KBA_cluster.csv")
