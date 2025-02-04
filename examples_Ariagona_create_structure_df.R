@@ -14,19 +14,31 @@ for (package in packages) {
 #############################################################################################
 
 ############################## import structure results ####################################
-# import assignment of individuals to populations
-q_matrix <- read.csv("C:/Users/Gronefeld/Desktop/D&D_examples/Clumpak_results/Ariagona/1733331390/K=3/MajorCluster/CLUMPP.files/ClumppIndFile.output", 
+# import assignment of individuals to populations  # the paths must be adjusted to were you saved the files
+q_matrix <- read.csv("C:/Users/Gronefeld/Desktop/D&D_examples/Clumpak_results/Ariagona/1733331390/K=3/MajorCluster/CLUMPP.files/ClumppIndFile.output", # (this file can be created by running structure with the settings specified in the publication)
                      header = FALSE, 
                      sep = "", 
                      fill = TRUE)
-# import names of individuals from structure input
+## ############ DAPC # this code can be used to see with another method that it is really 3 clusters
+## x <- read.structure("your/path/Supp_Ariagona_dataset.str")# /
+##5198 
+##1
+##2
+##
+##1
+##n
+## grp <- find.clusters(x, max.n.clust=40)
+## dapc1 <- dapc(x, grp$grp)
+################
+
+# import names of individuals from structure input (in the publication namened as Supp_Ariagona_dataset.str)
 names <- read.csv("C:/Users/Gronefeld/Desktop/D&D_examples/Ariagona_example/populationsV6.str", 
                   header = FALSE, 
                   sep = "", 
                   fill = TRUE)
 names <- unique(names$V1[-1])
 
-############################ import coordinate and collection data ############################
+############################ import coordinate and collection data ############################ (saved as Supp_Ariagona_coordinates.str)
 site_coordinates <- read.csv("C:/Users/Gronefeld/Desktop/D&D_examples/coordinates/Ariagona_coordinates.csv")
 
 ################################################################################################
