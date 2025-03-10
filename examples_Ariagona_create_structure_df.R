@@ -181,4 +181,4 @@ all <- merge(KBA, coordinate_cluster, by = "WGS84_X", all = TRUE)
 
 
 
-write.csv(all, "C:/Users/Gronefeld/Desktop/D&D_examples/Ariagona_example/Ariagona_KBA_cluster.csv")
+write.csv(all, "C:/Users/Gronefeld/Desktop/D&D_examples/Ariagona_example/Ariagona_KBA_cluster.csv", row.names= FALSE)
