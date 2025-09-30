@@ -100,3 +100,46 @@ if (exists('threshold_percentage_of_missing_values_that_is_removed')) { # if the
 } else {
   Genind <- missingno(Genind, type = method_type_to_handle_missing_values, quiet = FALSE, freq = FALSE)
 }  
+
+
+################################### calculate distances ############################
+
+# create a genind for every popoulation
+genind_list <- lapply(unique(population), function(pop_name) {
+   inds <- which(Genind@pop == pop_name)  # Indizes der Individuen der Population
+   Genind[inds, ] # Subset des genind-Objekts
+})
+names(genind_list) <- unique(population)
+
+
+# calculate Delta+ for every genind
+results_df <- data.frame(area = character(),
+                         expected_Dplus = numeric(),
+                         stringsAsFactors = FALSE)
+
+for(pop_name in names(genind_list)) {
+  genind_pop <- genind_list[[pop_name]]
+  # calculate allele frequencies: this is simple and only possible, because diploid!
+  allele_frequencies <- tab(genind_pop, freq = TRUE)
+  # calculate distance
+  dist_matrix <- bitwise.dist(genind_pop)
+  # calculate Delta+ for every locus
+  mod <- taxondive(t(allele_frequencies), dist_matrix)
+
+  # save results
+  results_df <- rbind(results_df, data.frame(area = pop_name,
+                                             expected_Dplus = mod$EDplus))
+}
+
+
+# calculate ratios
+sumDplus <- sum(results_df$expected_Dplus, na.rm = TRUE)
+results_df$Dplus_percent <- results_df$expected_Dplus / sumDplus * 100
+
+
+
+
+
+############### Save results ####################
+write.csv(results_df, file = paste(output_folder_path, "/AvTD_results.csv", sep = ""), row.names = TRUE)
+
