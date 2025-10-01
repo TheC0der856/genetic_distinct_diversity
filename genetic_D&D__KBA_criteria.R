@@ -1,4 +1,5 @@
 
+
 datasets <- c("Ambystoma_bishopi",
              "Avicennia_marina",
              "Cameraria_ohridella", 
@@ -129,76 +130,70 @@ for (dataset in datasets) {
 all_thresholds_met <- rbind(all_thresholds_met, thresholds_met)
 }
 
+# prepare data
+plot_data <- all_thresholds_met %>%
+  pivot_longer(
+    cols = c(amova, Eco, AvTD, Dest, lamda, NeE), 
+    names_to = "method", 
+    values_to = "criteria"
+  ) %>%
+  count(method, criteria) %>%
+  group_by(method) %>%
+  mutate(prop = n / sum(n) * 100)
 
-ggplot()+
-  geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$amova))*100), 
-           aes(x = -0.2, y = Freq, fill = Var1),
-           stat = "identity", 
-           color = "black",
-           size = 0.5, 
-           width = 0.08)+
-  geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$Eco))*100), 
-           aes(x = -0.1, y = Freq, fill = Var1),
-           stat = "identity", 
-           color = "black",
-           size = 0.5, 
-           width = 0.08) +
-  geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$lamda))*100), 
-           aes(x = 0, y = Freq, fill = Var1),
-           stat = "identity", 
-           color = "black",
-           size = 0.5, 
-           width = 0.08) +
-  geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$AvTD))*100), 
-           aes(x = 0.1, y = Freq, fill = Var1),
-           stat = "identity", 
-           color = "black",
-           size = 0.5, 
-           width = 0.08) +
-  geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$NeE))*100), 
-           aes(x = 0.2, y = Freq, fill = Var1),
-           stat = "identity", 
-           color = "black",
-           size = 0.5, 
-           width = 0.08) +
-  geom_bar(data = as.data.frame(prop.table(table(all_thresholds_met$Dest))*100), 
-           aes(x = 0.3, y = Freq, fill = Var1),
-           stat = "identity", 
-           color = "black",
-           size = 0.5, 
-           width = 0.08) +
-  scale_fill_manual(values = c("cornsilk1", "lightskyblue1", "salmon3"),
-                    name = "KBA criteria", 
-                    labels = c("≥ 1% (A1b)", "≥ 10% (B1 & A1b)", "no protection")) +
-  xlab("method") +
-  ylab("proportion of fulfilled criteria [%]") + 
-  labs(title = NULL)  +
+# fix order
+plot_data$method <- factor(plot_data$method, 
+                           levels = c("amova", "Eco", "AvTD", "Dest", "lamda", "NeE"))
+
+# create plot
+ggplot(plot_data, aes(x = method, y = prop, fill = criteria)) +
+  geom_bar(stat = "identity", color = "black", size = 0.5, width = 0.8) +
+  
+  # colors and legend
+  scale_fill_manual(
+    values = c("cornsilk1", "lightskyblue1", "salmon3"),
+    name = "KBA criteria", 
+    labels = c("≥ 1% (A1b)", "≥ 10% (B1 & A1b)", "no protection")
+  ) +
+  
+  # Labels
+  xlab("method") + 
+  ylab("proportion of fulfilled criteria [%]") +
+  scale_x_discrete(labels = c(
+    amova = "AMOVA",
+    Eco = "Allelic Overlap",
+    AvTD = expression(Delta^"+"),
+    Dest = expression("D"["est"]),
+    lamda = expression("λ"["cor"]),
+    NeE = expression("N"["e"])
+  )) +
+
+  # Design 
   theme(
-    legend.position = "bottom", 
+    legend.position = "bottom",
     panel.background = element_rect(fill = "white", color = NA), 
     plot.background = element_rect(fill = "white", color = NA),  
     panel.grid.major = element_blank(),  
     panel.grid.minor = element_blank(), 
-    axis.text.x = element_text(angle = 90, 
-                               hjust = 0.5, 
-                               vjust = 0.5, 
-                               size = 15),
     axis.line.x = element_line(color = "black", size = 0.5),
-    axis.title.x = element_text(size = 19, face = "bold", 
-                                margin = margin(t = 20, r = 0, b = 0, l = 0)),
-    axis.ticks.length = unit(0.25, "cm"),
-    axis.text.y = element_text(size = 15),
     axis.line.y = element_line(color = "black", size = 0.5),
-    axis.title.y = element_text(size = 19, face = "bold", 
-                                margin = margin(t = 0, r = 20, b = 0, l = 0)), 
-    plot.margin = margin(20, 20, 10, 5), 
-    legend.title= element_text(size= 14),
-    legend.text= element_text(size= 13)) +
-  scale_x_continuous(breaks = seq(-0.2, 0.3, by = 0.1), 
-                     labels = c("AMOVA", 
-                                "Allelic Overlap",
-                                expression("λ"["cor"]), 
-                                expression(Delta^"+"), 
-                                expression("N"["e"]),
-                                expression("D"["est"]))) 
-
+    axis.ticks.length = unit(0.25, "cm"),
+    axis.title.x = element_text(
+      size = 19, face = "bold", 
+      margin = margin(t = 20, r = 0, b = 0, l = 0)
+    ),
+    axis.title.y = element_text(
+      size = 19, face = "bold", 
+      margin = margin(t = 0, r = 20, b = 0, l = 0)
+    ),
+    axis.text.x = element_text(
+      angle = 90, 
+      hjust = 0.5, 
+      vjust = 0.5, 
+      size = 15
+    ),
+    axis.text.y = element_text(size = 15),
+    plot.margin = margin(20, 20, 10, 5),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 13)
+  )
