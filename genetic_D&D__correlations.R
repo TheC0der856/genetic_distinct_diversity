@@ -1,5 +1,4 @@
 
-
 #################################################################################################
 ######################### Load all results into R ###############################################
 #################################################################################################
@@ -81,11 +80,6 @@ for (name in all_names_with_NeEstimator_results) {
 }
 
 
-
-
-
-
-
 ############################# check for correlations ################################################
 #####################################################################################################
 correlation_method <- "kendall" # can be "pearson", "kendall" or "spearm"
@@ -101,132 +95,69 @@ correlation_method <- "kendall" # can be "pearson", "kendall" or "spearm"
 
 
 ########################## Test correlations with Dest ############################################
-Ne_Dest_correlation_test <- cor.test(as.numeric(all_results_with_Ne_final$Dest), as.numeric(all_results_with_Ne_final$Ne), method = correlation_method)
-# save p-value
-Ne_Dest_correlation_p_value <- Ne_Dest_correlation_test$p.value
-# save the estimated correlation coefficient
-Ne_Dest_correlation_coefficient <- Ne_Dest_correlation_test$estimate
+Ne_Dest <- cor.test(as.numeric(all_results_with_Ne_final$Dest), as.numeric(all_results_with_Ne_final$Ne), method = correlation_method)
 
-Dest_diversity_correlation_test <- cor.test(as.numeric(Dest), as.numeric(lambda), method = correlation_method)
-Dest_diversity_correlation_p_value <- Dest_diversity_correlation_test$p.value
-Dest_diversity_correlation_coefficient <- Dest_diversity_correlation_test$estimate
+Dest_lambda <- cor.test(as.numeric(Dest), as.numeric(lambda), method = correlation_method)
 
-Dest_Amova_correlation_test <- cor.test(as.numeric(subset(Dest, AMOVA <= 40)),
-                                       as.numeric(subset(AMOVA, AMOVA <= 40)),
-                                       method = correlation_method)
-Dest_Amova_correlation_p_value <- Dest_Amova_correlation_test$p.value
-Dest_Amova_correlation_coefficient <- Dest_Amova_correlation_test$estimate
+Dest_Amova <- cor.test(as.numeric(subset(Dest, AMOVA <= 40)),
+                       as.numeric(subset(AMOVA, AMOVA <= 40)),
+                       method = correlation_method)
 
-Dest_Overlaps_correlation_test <- cor.test(as.numeric(Dest), as.numeric(EcoSim), method = correlation_method)
-Dest_Overlaps_correlation_p_value <- Dest_Overlaps_correlation_test$p.value
-Dest_Overlaps_correlation_coefficient <- Dest_Overlaps_correlation_test$estimate
+Dest_Overlaps <- cor.test(as.numeric(Dest), as.numeric(EcoSim), method = correlation_method)
 
-Dest_AvTD_correlation_test <- cor.test(as.numeric(Dest), as.numeric(AvTD), method = correlation_method)
-Dest_AvTD_correlation_p_value <- Dest_AvTD_correlation_test$p.value
-Dest_AvTD_correlation_coefficient <- Dest_AvTD_correlation_test$estimate
+Dest_AvTD <- cor.test(as.numeric(Dest), as.numeric(AvTD), method = correlation_method)
 
+Ne_lambda <- cor.test(as.numeric(all_results_with_Ne_final$Ne), as.numeric(all_results_with_Ne_final$allelic_diversity), method = correlation_method)
 
-########################## Test correlations with Ne Estimator ############################################
-# Test the correlation between Ne Estimator results and lambda corrected for sample size
-Ne_diversity_correlation_test <- cor.test(as.numeric(all_results_with_Ne_final$Ne), as.numeric(all_results_with_Ne_final$allelic_diversity), method = correlation_method)
-# save p-value
-Ne_diversity_correlation_p_value <- Ne_diversity_correlation_test$p.value
-# save the estimated correlation coefficient
-Ne_diversity_correlation_coefficient <- Ne_diversity_correlation_test$estimate
+Ne_Amova <- cor.test(as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Ne),
+                     as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Difference),
+                     method = correlation_method)  
 
-# Test the correlation between Ne Estimator results and AMOVA
-Ne_Amova_correlation_test <- cor.test(as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Ne),
-                                      as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Difference),
-                                      method = correlation_method) # 
-# save p-value
-Ne_Amova_correlation_p_value <- Ne_Amova_correlation_test$p.value
-# save the estimated correlation coefficient
-Ne_Amova_correlation_coefficient <- Ne_Amova_correlation_test$estimate
+Ne_Overlaps <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$observed_overlap), method = correlation_method)
 
-# Test the correlation between Ne Estimator results and observed overlap
-Ne_Overlaps_correlation_test <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$observed_overlap), method = correlation_method)
-# save p-value
-Ne_Overlaps_correlation_p_value <- Ne_Overlaps_correlation_test$p.value
-# save the estimated correlation coefficient
-Ne_Overlaps_correlation_coefficient <- Ne_Overlaps_correlation_test$estimate
+lambda_Overlaps <- cor.test(as.numeric(lambda), as.numeric(EcoSim), method = correlation_method)
 
-# Test the correlation between Ne Estimator results and AvTD 
-Ne_AvTD_correlation_test <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$AvTD), method = correlation_method)
-# save p-value
-Ne_AvTD_correlation_p_value <- Ne_AvTD_correlation_test$p.value
-# save the estimated correlation coefficient
-Ne_AvTD_correlation_coefficient <- Ne_AvTD_correlation_test$estimate
+lambda_Amova <- cor.test(as.numeric(subset(lambda, AMOVA <= 40)), 
+                         as.numeric(subset(AMOVA, AMOVA <= 40)),
+                         method = correlation_method)
+
+Amova_Overlaps <- cor.test(as.numeric(subset(AMOVA, AMOVA <= 40)),
+                           as.numeric(subset(EcoSim, AMOVA <= 40)),
+                           method = correlation_method) 
+
+AvTD_AMOVA <- cor.test(as.numeric(subset(AvTD, AMOVA <= 40)),
+                       as.numeric(subset(AMOVA, AMOVA <= 40)),
+                       method = correlation_method)
+
+lambda_AvTD <- cor.test(as.numeric(lambda), as.numeric(AvTD), method = correlation_method)
+
+AvTD_overlap <- cor.test(as.numeric(AvTD), as.numeric(EcoSim) , method = correlation_method)
+
+Ne_AvTD <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$AvTD), method = correlation_method)
 
 
-########################### Test correlations without Ne calculations ############################
-# Test the correlation between allele diversity and shared alleles
-diversity_Overlaps_correlation_test <- cor.test(as.numeric(lambda), as.numeric(EcoSim), method = correlation_method)
-# save p-value
-diversity_Overlaps_correlation_p_value <- diversity_Overlaps_correlation_test$p.value
-# save the estimated correlation coefficient
-diversity_Overlaps_correlation_coefficient <- diversity_Overlaps_correlation_test$estimate
-
-# Test the correlation between allele diversity and rare alleles
-diversity_Amova_correlation_test <- cor.test(as.numeric(subset(lambda, AMOVA <= 40)), 
-                                             as.numeric(subset(AMOVA, AMOVA <= 40)),
-                                             method = correlation_method)
-# save p-value
-diversity_Amova_correlation_p_value <- diversity_Amova_correlation_test$p.value
-# save the estimated correlation coefficient
-diversity_Amova_correlation_coefficient <- diversity_Amova_correlation_test$estimate
-
-# Test the correlation between rare alleles and shared alleles
-# Here I find it difficult to evaluate what is the independent variable and what is the dependent variable. 
-# You could probably look at it the other way around too.
-Amova_Overlaps_correlation_test <- cor.test(as.numeric(subset(AMOVA, AMOVA <= 40)),
-                                            as.numeric(subset(EcoSim, AMOVA <= 40)),
-                                            method = correlation_method) 
-# save p-value
-Amova_Overlaps_correlation_p_value <- Amova_Overlaps_correlation_test$p.value
-# save the estimated correlation coefficient
-Amova_Overlaps_correlation_coefficient <- Amova_Overlaps_correlation_test$estimate
-
-# Test the correlation between AvTD and AMOVA looking only at sites with Ne Estimator calculated
-AvTD_AMOVA_correlation_test <- cor.test(as.numeric(subset(AvTD, AMOVA <= 40)),
-                                        as.numeric(subset(AMOVA, AMOVA <= 40)),
-                                        method = correlation_method)
-# save p-value
-AvTD_AMOVA_correlation_p_value <- AvTD_AMOVA_correlation_test$p.value
-# save the estimated correlation coefficient
-AvTD_AMOVA_correlation_coefficient <- AvTD_AMOVA_correlation_test$estimate
-
-# Test the correlation between genetic diversity and AvTD looking only at sites with Ne Estimator calculated
-diversity_AvTD_correlation_test <- cor.test(as.numeric(lambda), as.numeric(AvTD), method = correlation_method)
-# save p-value
-diversity_AvTD_correlation_p_value <- diversity_AvTD_correlation_test$p.value
-# save the estimated correlation coefficient
-diversity_AvTD_correlation_coefficient <- diversity_AvTD_correlation_test$estimate
-
-# Test the correlation between AvTD and observed overlap looking only at sites with Ne Estimator calculated
-AvTD_overlap_correlation_test <- cor.test(as.numeric(AvTD), as.numeric(EcoSim) , method = correlation_method)
-# save p-value
-AvTD_overlap_correlation_p_value <- AvTD_overlap_correlation_test$p.value
-# save the estimated correlation coefficient
-AvTD_overlap_correlation_coefficient <- AvTD_overlap_correlation_test$estimate
-# Thank you Lukas Knob for improving my Script on correlations!
 
 
 ################# Create a correlations plot ################################################################
 # Create a table with correlation test results
-correlation_results <- data.frame(
-  tested_methods = c("Ne_diversity", "Ne_Amova", "Ne_Overlaps", "diversity_Overlaps", "diversity_Amova", "Amova_Overlaps", 
-                     "Ne_Dest", "Dest_diversity", "Dest_Amova", "Dest_Overlaps", "Dest_AvTD",
-                     "AvTD_AMOVA", "diversity_AvTD", "AvTD_Overlaps", "Ne_AvTD"),
-  p_value = c(Ne_diversity_correlation_p_value, Ne_Amova_correlation_p_value, Ne_Overlaps_correlation_p_value, 
-              diversity_Overlaps_correlation_p_value, diversity_Amova_correlation_p_value, Amova_Overlaps_correlation_p_value, 
-              Ne_Dest_correlation_p_value, Dest_diversity_correlation_p_value, Dest_Amova_correlation_p_value, 
-              Dest_Overlaps_correlation_p_value, Dest_AvTD_correlation_p_value , 
-              AvTD_AMOVA_correlation_p_value, diversity_AvTD_correlation_p_value, AvTD_overlap_correlation_p_value, Ne_AvTD_correlation_p_value),  
-  correlation_coefficient = c(Ne_diversity_correlation_coefficient, Ne_Amova_correlation_coefficient, Ne_Overlaps_correlation_coefficient, 
-                              diversity_Overlaps_correlation_coefficient, diversity_Amova_correlation_coefficient, Amova_Overlaps_correlation_coefficient, 
-                              Ne_Dest_correlation_coefficient, Dest_diversity_correlation_coefficient, Dest_Amova_correlation_coefficient, 
-                              Dest_Overlaps_correlation_coefficient, Dest_AvTD_correlation_coefficient, Dest_Amova_correlation_coefficient, 
-                              diversity_AvTD_correlation_coefficient, AvTD_overlap_correlation_coefficient, Ne_AvTD_correlation_coefficient)
+correlations <- data.frame(
+  tested_methods = c("Ne_lambda", "Ne_Amova", "Ne_Overlaps", 
+                     "lambda_Overlaps", "lambda_Amova", "Amova_Overlaps", 
+                     "Ne_Dest", "Dest_lambda", "Dest_Amova", 
+                     "Dest_Overlaps", "Dest_AvTD",
+                     "AvTD_AMOVA", "lambda_AvTD", "AvTD_Overlaps", "Ne_AvTD"),
+  
+  p_value = c(Ne_lambda$p.value, Ne_Amova$p.value, Ne_Overlaps$p.value, 
+              lambda_Overlaps$p.value, lambda_Amova$p.value, Amova_Overlaps$p.value, 
+              Ne_Dest$p.value, Dest_lambda$p.value, Dest_Amova$p.value, 
+              Dest_Overlaps$p.value, Dest_AvTD$p.value , 
+              AvTD_AMOVA$p.value, lambda_AvTD$p.value, AvTD_overlap$p.value, Ne_AvTD$p.value),  
+  
+  correlation_coefficient = c(Ne_lambda$estimate, Ne_Amova$estimate, Ne_Overlaps$estimate, 
+                              lambda_Overlaps$estimate, lambda_Amova$estimate, Amova_Overlaps$estimate, 
+                              Ne_Dest$estimate, Dest_lambda$estimate, Dest_Amova$estimate, 
+                              Dest_Overlaps$estimate, Dest_AvTD$estimate, 
+                              AvTD_AMOVA$estimate, lambda_AvTD$estimate, AvTD_overlap$estimate, Ne_AvTD$estimate)
 )
 
 # Create matrices for correlation results with Ne
@@ -280,6 +211,3 @@ cat( " *** = p-value is below 0.001, ** = p-value is below 0.01, * = p-value is 
 # save results
 dev.copy(png, file.path("correlations.png"))
 dev.off()
-
-
-
