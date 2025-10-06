@@ -133,7 +133,7 @@ all_thresholds_met <- rbind(all_thresholds_met, thresholds_met)
 # prepare data
 plot_data <- all_thresholds_met %>%
   pivot_longer(
-    cols = c(amova, Eco, AvTD, Dest, lamda, NeE), 
+    cols = c(Eco, amova, AvTD, Dest, lamda, NeE), 
     names_to = "method", 
     values_to = "criteria"
   ) %>%
@@ -143,7 +143,7 @@ plot_data <- all_thresholds_met %>%
 
 # fix order
 plot_data$method <- factor(plot_data$method, 
-                           levels = c("amova", "Eco", "AvTD", "Dest", "lamda", "NeE"))
+                           levels = c("Eco", "amova", "AvTD", "Dest", "lamda", "NeE"))
 
 # create plot
 ggplot(plot_data, aes(x = method, y = prop, fill = criteria)) +
@@ -160,8 +160,8 @@ ggplot(plot_data, aes(x = method, y = prop, fill = criteria)) +
   xlab("method") + 
   ylab("proportion of fulfilled criteria [%]") +
   scale_x_discrete(labels = c(
-    amova = "AMOVA",
     Eco = "Allelic Overlap",
+    amova = "AMOVA",
     AvTD = expression(Delta^"+"),
     Dest = expression("D"["est"]),
     lamda = expression("λ"["cor"]),
