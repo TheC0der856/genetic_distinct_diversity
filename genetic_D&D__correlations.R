@@ -14,6 +14,7 @@ AMOVA <- c()
 EcoSim <- c()
 AvTD <- c()
 Dest <- c()
+Allelic_richness <- c()
 #plot(AMOVA,EcoSim)
 for (name in all_names) {
   file_path <- name 
@@ -35,6 +36,9 @@ for (name in all_names) {
   # Load Dest results
   Dest_results <- read.csv(paste("Results", describe_results_variable, "/Dest/Dest_results.csv", sep = ""))
   Dest <- c(Dest, Dest_results$Dest)
+  # Load allelic richness
+  allelic_richness_results <- read.csv(paste("Results", describe_results_variable, "/Allelic_richness/Allelic_richness_results.csv", sep = ""))
+  Allelic_richness <- c(Allelic_richness, allelic_richness_results$Werte)
 }
 
 ############ Load data with Ne Estimator ####################################
@@ -56,6 +60,7 @@ for (name in all_names_with_NeEstimator_results) {
   AvTD_results <- read.csv(paste("Results", describe_results_variable, "/AvTD/AvTD_results.csv", sep = "", quote = ""))
   # Load Dest 
   Dest_results <- read.csv(paste("Results", describe_results_variable, "/Dest/Dest_results.csv", sep = ""))
+  allelic_richness_results <- read.csv(paste("Results", describe_results_variable, "/Allelic_richness/Allelic_richness_results.csv", sep = ""))
   # Prepare data for correlation calculations with Ne:
   # For analyses including Ne rows of the other methods most likely must be removed, because it might have been impossible to calculate Ne for all sites.
   # remove information about confidence interval to keep it simple
@@ -66,6 +71,7 @@ for (name in all_names_with_NeEstimator_results) {
   all_results_with_Ne$Difference <- NA
   all_results_with_Ne$AvTD <- NA
   all_results_with_Ne$Dest <- NA
+  all_results_with_Ne$Allelic_richness <- NA
   all_results_with_Ne$data <- name
   # Append Ne table, add results of other calculations. 
   # Thereby unnecessary rows are removed automatically from the data set. 
@@ -75,6 +81,7 @@ for (name in all_names_with_NeEstimator_results) {
     all_results_with_Ne$Difference[which(all_results_with_Ne$site == site)] <- amova_results$Difference [which(amova_results$site == site)]
     all_results_with_Ne$AvTD[which(all_results_with_Ne$site == site)] <- AvTD_results$expected_Dplus[which(AvTD_results$area == site)]
     all_results_with_Ne$Dest[which(all_results_with_Ne$site == site)] <- Dest_results$Dest[which(Dest_results$population == site)]
+    all_results_with_Ne$Allelic_richness[which(all_results_with_Ne$site == site)] <- allelic_richness_results$Werte[which(allelic_richness_results$pop == site)]
   }
   all_results_with_Ne_final <- rbind(all_results_with_Ne_final, all_results_with_Ne)
 }
@@ -94,14 +101,37 @@ correlation_method <- "kendall" # can be "pearson", "kendall" or "spearm"
 # The independent variable is named at the beginning and the dependent variable at the second place.
 
 
-########################## Test correlations with Dest ############################################
+########################## Test correlations with allelic richness ###############################
+Ne_Ar<- cor.test(as.numeric(all_results_with_Ne_final$Ne), as.numeric(all_results_with_Ne_final$Allelic_richness), method = correlation_method)
+
+
+Ar_Dest <- cor.test(as.numeric(Allelic_richness), as.numeric(Dest), method = correlation_method)
+
+
+lambda_Ar<- cor.test(as.numeric(lambda), as.numeric(Allelic_richness), method = correlation_method)
+
+
+Ar_Amova <- cor.test(as.numeric(subset(Allelic_richness, AMOVA <= 40)),
+                                        as.numeric(subset(AMOVA, AMOVA <= 40)),
+                                        method = correlation_method)
+
+
+Ar_Overlaps <- cor.test(as.numeric(Allelic_richness), as.numeric(EcoSim), method = correlation_method)
+
+
+Ar_AvTD <- cor.test(as.numeric(Allelic_richness), as.numeric(AvTD), method = correlation_method)
+
+
+
+
+########################## 
 Ne_Dest <- cor.test(as.numeric(all_results_with_Ne_final$Dest), as.numeric(all_results_with_Ne_final$Ne), method = correlation_method)
 
 Dest_lambda <- cor.test(as.numeric(Dest), as.numeric(lambda), method = correlation_method)
 
 Dest_Amova <- cor.test(as.numeric(subset(Dest, AMOVA <= 40)),
-                       as.numeric(subset(AMOVA, AMOVA <= 40)),
-                       method = correlation_method)
+                                  as.numeric(subset(AMOVA, AMOVA <= 40)),
+                                  method = correlation_method)
 
 Dest_Overlaps <- cor.test(as.numeric(Dest), as.numeric(EcoSim), method = correlation_method)
 
@@ -110,30 +140,32 @@ Dest_AvTD <- cor.test(as.numeric(Dest), as.numeric(AvTD), method = correlation_m
 Ne_lambda <- cor.test(as.numeric(all_results_with_Ne_final$Ne), as.numeric(all_results_with_Ne_final$allelic_diversity), method = correlation_method)
 
 Ne_Amova <- cor.test(as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Ne),
-                     as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Difference),
-                     method = correlation_method)  
+                                      as.numeric(subset(all_results_with_Ne_final, all_results_with_Ne_final$Difference <= 40)$Difference),
+                                      method = correlation_method)  
 
 Ne_Overlaps <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$observed_overlap), method = correlation_method)
 
 lambda_Overlaps <- cor.test(as.numeric(lambda), as.numeric(EcoSim), method = correlation_method)
-
+ 
 lambda_Amova <- cor.test(as.numeric(subset(lambda, AMOVA <= 40)), 
-                         as.numeric(subset(AMOVA, AMOVA <= 40)),
-                         method = correlation_method)
+                                             as.numeric(subset(AMOVA, AMOVA <= 40)),
+                                             method = correlation_method)
 
 Amova_Overlaps <- cor.test(as.numeric(subset(AMOVA, AMOVA <= 40)),
-                           as.numeric(subset(EcoSim, AMOVA <= 40)),
-                           method = correlation_method) 
+                                            as.numeric(subset(EcoSim, AMOVA <= 40)),
+                                            method = correlation_method) 
 
 AvTD_AMOVA <- cor.test(as.numeric(subset(AvTD, AMOVA <= 40)),
-                       as.numeric(subset(AMOVA, AMOVA <= 40)),
-                       method = correlation_method)
+                                        as.numeric(subset(AMOVA, AMOVA <= 40)),
+                                        method = correlation_method)
 
 lambda_AvTD <- cor.test(as.numeric(lambda), as.numeric(AvTD), method = correlation_method)
 
 AvTD_overlap <- cor.test(as.numeric(AvTD), as.numeric(EcoSim) , method = correlation_method)
 
-Ne_AvTD <- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$AvTD), method = correlation_method)
+Ne_AvTD<- cor.test(as.numeric(all_results_with_Ne_final$Ne),as.numeric(all_results_with_Ne_final$AvTD), method = correlation_method)
+
+
 
 
 
@@ -145,47 +177,61 @@ correlations <- data.frame(
                      "lambda_Overlaps", "lambda_Amova", "Amova_Overlaps", 
                      "Ne_Dest", "Dest_lambda", "Dest_Amova", 
                      "Dest_Overlaps", "Dest_AvTD",
-                     "AvTD_AMOVA", "lambda_AvTD", "AvTD_Overlaps", "Ne_AvTD"),
+                     "AvTD_AMOVA", "lambda_AvTD", "AvTD_Overlaps", "Ne_AvTD", 
+                     "Ne_Ar", "Ar_Dest", "lambda_Ar", 
+                     "Ar_AMOVA", "Ar_Overlaps", "Ar_AvTD"),
   
   p_value = c(Ne_lambda$p.value, Ne_Amova$p.value, Ne_Overlaps$p.value, 
               lambda_Overlaps$p.value, lambda_Amova$p.value, Amova_Overlaps$p.value, 
               Ne_Dest$p.value, Dest_lambda$p.value, Dest_Amova$p.value, 
               Dest_Overlaps$p.value, Dest_AvTD$p.value , 
-              AvTD_AMOVA$p.value, lambda_AvTD$p.value, AvTD_overlap$p.value, Ne_AvTD$p.value),  
+              AvTD_AMOVA$p.value, lambda_AvTD$p.value, AvTD_overlap$p.value, Ne_AvTD$p.value, 
+              Ne_Ar$p.value, Ar_Dest$p.value, lambda_Ar$p.value, 
+              Ar_Amova$p.value, Ar_Overlaps$p.value, Ar_AvTD$p.value),  
   
   correlation_coefficient = c(Ne_lambda$estimate, Ne_Amova$estimate, Ne_Overlaps$estimate, 
                               lambda_Overlaps$estimate, lambda_Amova$estimate, Amova_Overlaps$estimate, 
                               Ne_Dest$estimate, Dest_lambda$estimate, Dest_Amova$estimate, 
                               Dest_Overlaps$estimate, Dest_AvTD$estimate, 
-                              AvTD_AMOVA$estimate, lambda_AvTD$estimate, AvTD_overlap$estimate, Ne_AvTD$estimate)
+                              AvTD_AMOVA$estimate, lambda_AvTD$estimate, AvTD_overlap$estimate, Ne_AvTD$estimate, 
+                              Ne_Ar$estimate, Ar_Dest$estimate, lambda_Ar$estimate, 
+                              Ar_Amova$estimate, Ar_Overlaps$estimate, Ar_AvTD$estimate)
 )
 
 # Create matrices for correlation results with Ne
 # Create a correlation matrix
 correlation_matrix <- data.frame(
-  AMOVA = c(1, correlation_results[5,3], correlation_results[6,3], correlation_results[2,3], correlation_results[9,3], correlation_results[12,3]),
-  lambda = c(correlation_results[5,3], 1, correlation_results[4,3], correlation_results[1,3], correlation_results[8,3], correlation_results[13,3]),
-  Overlaps = c(correlation_results[6,3], correlation_results[4,3], 1, correlation_results[3,3], correlation_results[10,3], correlation_results[14,3]), 
-  Ne = c(correlation_results[2,3], correlation_results[1,3], correlation_results[3,3], 1, correlation_results[7,3], correlation_results[15,3]), 
-  Dest = c(correlation_results[9,3], correlation_results[8,3], correlation_results[10,3], correlation_results[7,3], 1, correlation_results[11,3]),
-  AvTD = c(correlation_results[12,3], correlation_results[13,3], correlation_results[14,3], correlation_results[15,3], correlation_results[11,3], 1)
+  AMOVA =    c(1, correlations[5,3], correlations[6,3], correlations[2,3], correlations[9,3], correlations[12,3], correlations[19,3]),
+  lambda =   c(correlations[5,3], 1, correlations[4,3], correlations[1,3], correlations[8,3], correlations[13,3], correlations[18,3]),
+  Overlaps = c(correlations[6,3], correlations[4,3], 1, correlations[3,3], correlations[10,3], correlations[14,3], correlations[20,3]), 
+  Ne =       c(correlations[2,3], correlations[1,3], correlations[3,3], 1, correlations[7,3], correlations[15,3], correlations[16,3]), 
+  Dest =     c(correlations[9,3], correlations[8,3], correlations[10,3], correlations[7,3], 1, correlations[11,3], correlations[17,3]),
+  AvTD =     c(correlations[12,3], correlations[13,3], correlations[14,3], correlations[15,3], correlations[11,3], 1, correlations[21,3]),
+  Ar =       c(correlations[19,3], correlations[18,3], correlations[20,3], correlations[16,3], correlations[17,3], correlations[21,3], 1)
 )
-colnames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'")
-rownames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'")
+colnames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'", "Allelic richness")
+rownames(correlation_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'", "Allelic richness")
 correlation_matrix <- as.matrix(correlation_matrix)
 
 # Create a p-value matrix
 p_matrix <- data.frame(
-  AMOVA = c(1, correlation_results[5,2], correlation_results[6,2], correlation_results[2,2], correlation_results[9,2], correlation_results[12,2]),
-  lambda = c(correlation_results[5,2], 1, correlation_results[4,2], correlation_results[1,2], correlation_results[8,2], correlation_results[13,2]),
-  Overlaps = c(correlation_results[6,2], correlation_results[4,2], 1, correlation_results[3,2], correlation_results[10,2], correlation_results[14,2]), 
-  Ne = c(correlation_results[2,2], correlation_results[1,2], correlation_results[3,2], 1, correlation_results[7,2], correlation_results[15,2]), 
-  NeS = c(correlation_results[9,2], correlation_results[8,2], correlation_results[10,2], correlation_results[7,2], 1, correlation_results[11,2]),
-  AvTD = c(correlation_results[12,2], correlation_results[13,2], correlation_results[14,2], correlation_results[15,2], correlation_results[11,2], 1)
+  AMOVA =    c(1, correlations[5,2], correlations[6,2], correlations[2,2], correlations[9,2], correlations[12,2], correlations[19,2]),
+  lambda =   c(correlations[5,2], 1, correlations[4,2], correlations[1,2], correlations[8,2], correlations[13,2], correlations[18,2]),
+  Overlaps = c(correlations[6,2], correlations[4,2], 1, correlations[3,2], correlations[10,2], correlations[14,2], correlations[20,2]), 
+  Ne =       c(correlations[2,2], correlations[1,2], correlations[3,2], 1, correlations[7,2], correlations[15,2], correlations[16,2]), 
+  NeS =      c(correlations[9,2], correlations[8,2], correlations[10,2], correlations[7,2], 1, correlations[11,2], correlations[17,2]),
+  AvTD =     c(correlations[12,2], correlations[13,2], correlations[14,2], correlations[15,2], correlations[11,2], 1, correlations[21,2]),
+  Ar =       c(correlations[19,2], correlations[18,2], correlations[20,2], correlations[16,2], correlations[17,2], correlations[21,2], 1)
 )
-colnames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'")
-rownames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'")
+colnames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'", "Allelic richness")
+rownames(p_matrix) <- c("AMOVA", ":λ[cor]", "Allelic Overlap", ":N[e]", ":D[est]", ":Δ^'+'", "Allelic richness")
 p_matrix <- as.matrix(p_matrix)
+
+
+desired_order <- c("Allelic Overlap", "Allelic richness", "AMOVA", ":Δ^'+'", ":D[est]",":λ[cor]", ":N[e]")
+correlation_matrix <- correlation_matrix[desired_order, desired_order]
+p_matrix <- p_matrix[desired_order, desired_order]
+
 
 # requirement to use plot function:
 # for being able to execute adjust_points_corrplot() you have to load the corrplot() environment, otherwise many functions are missing to successfully run the function.
@@ -198,7 +244,7 @@ plot.new()
 x_position_point <- 0.19 
 y_position_point <- 0.2
 # Display results
-adjust_points_corrplot(correlation_matrix, method= "square", type="upper", order="hclust",
+adjust_points_corrplot(correlation_matrix, method= "square", type="upper", order="original",
                        addCoef.col = "black", # Add coefficient of correlation
                        tl.col="black", tl.srt=45,  #color and rotation
                        p.mat = p_matrix, 
@@ -211,3 +257,4 @@ cat( " *** = p-value is below 0.001, ** = p-value is below 0.01, * = p-value is 
 # save results
 dev.copy(png, file.path("correlations.png"))
 dev.off()
+
