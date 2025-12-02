@@ -1,8 +1,8 @@
 Main Calculations:
 
 
-To finally calculate correlations and identify KBAs and display the ratios of KBAs identified between different methods different scripts were used that all start with genetic_D&D. 
-If you want to execute these scripts you should start with downloading files and format them like the example files (originally downloaded from Dryad, but in a different formats): 
+To calculate correlations, identify KBAs, and display the ratios of KBAs identified between different methods different scripts were used that all start with genetic_D&D. 
+If you want to execute these scripts you should start with downloading a file and format it. The scripts are based on xlsx files. The first column of the table is suppose to be the individual ID, the second column of the table is the name of the area. There is just one row per individual, but two columns per genetic marker. The genetic markers start at the third column. There is no header required for the indiviudal column, the area column, and the columns for every second allele for a locus. The sheet including the table whould have the name welcomeR. Example files, which are in the correct format can be downloaded here. They were originally downloaded from Dryad: 
 
 
 Cymodocea nodosa: Arnaud-Haond, Sophie et al. (2014). Data from: Disentangling the influence of mutation and migration in clonal seagrasses using the Genetic Distance Spectrum for microsatellites [Dataset]. Dryad. https://doi.org/10.5061/dryad.3b8k6 
@@ -10,7 +10,7 @@ Cymodocea nodosa: Arnaud-Haond, Sophie et al. (2014). Data from: Disentangling t
 
 Salmo trutta: Andersson, Anastasia; Karlsson, Sten; Ryman, Nils; Laikre, Linda (2022). Monitoring genetic diversity with new indicators applied to an alpine freshwater top predator [Dataset]. Dryad. https://doi.org/10.5061/dryad.fbg79cnx5 
 
-The next step is tp create an R project and start with opening "genetic_D&D__Main_Script.R". The function show_menu() in the end of genetic_D&D__Main_Script.R will guide you through the calculation methods: lambda, AMOVA, allelic overlap, Ne calculations and AvTD. If you want to use the "genetic_D&D__Overlaps.R" Script you should install EcoSimR into your R project first (https://www.uvm.edu/~ngotelli/EcoSim/EcoSim.html). You can run the script to calculate correlations and the script to identify KBAs only after having results for each method for several data sets.
+The next step is to download the entire github repository. Some scipts are depending on others and will produce errors if they are executed without the associated scipts on the correct location in the folder. Then you should create an R project. If you want to use the "genetic_D&D__Overlaps.R" Script you should install EcoSimR into your R project first (https://www.uvm.edu/~ngotelli/EcoSim/EcoSim.html). Start with opening "genetic_D&D__Main_Script.R". This script needs to be executed before calculating each of the six methods. After all six methods were calculated for each dataset you can execute the script to calculate correlations and the script to identify KBAs.
 
 
 
