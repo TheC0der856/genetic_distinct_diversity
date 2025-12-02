@@ -35,3 +35,6 @@ if(!require('RLDNe')) {       # enables using NeEstimatorV2.1 (Do et al. 2014) i
 if(!require('ggplot2')) {
   install.packages('ggplot2')  # used in KBA script to display data
 }
+if(!require('hierfstat')) {       # calculate Dest and allelic richness
+  install.packages('hierfstat')
+}
