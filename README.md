@@ -1,6 +1,9 @@
 Main Calculations:
 
 
+To identify KBAs using Δ⁺ with your own dataset follow the instructions on this webpage: https://rpubs.com/Who_could_this_be_2/1376052.
+
+
 To calculate correlations, identify KBAs, and display the ratios of KBAs identified between different methods different scripts were used that all start with genetic_D&D. 
 If you want to execute these scripts you should start with downloading a file and format it. The scripts are based on xlsx files. The first column of the table is suppose to be the individual ID, the second column of the table is the name of the area. There is just one row per individual, but two columns per genetic marker. The genetic markers start at the third column. There is no header required for the indiviudal column, the area column, and the columns for every second allele for a locus. The sheet including the table whould have the name welcomeR. Example files, which are in the correct format can be downloaded here. They were originally downloaded from Dryad: 
 
