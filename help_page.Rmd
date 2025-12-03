@@ -1,0 +1,189 @@
+---
+title: "How identify Key Biodiversity Areas with Δ⁺?"
+author: "Sarah C. Gronefeld"
+date: "2024-09-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Key Biodiversity Areas (KBAs) are sites that contribute significantly to the global persistence of biodiversity. Distinct genetic diversity has been introduced as one of the metrics to identify KBAs for threatened and range-restricted species (IUCN 2016). We recommend using Δ⁺ on SNP or microsatellite data to calculate distinct genetic diversity (Clarke & Warwick 1998). To apply Δ⁺ to calculate distinct genetic diversity and identify KBAs, follow the instructions.
+
+
+## Install packages
+
+At first you should install and load the packages adegenet, poppr, and vegan into you current R session (Jombart 2008, Jombart & Ahmed 2011, Kamvar et al. 2014, Oksanen et al. 2024). Adegenet is used to handle genetic data sets, vegan is used to calculate Δ⁺, and poppr is used to calculate genetic distances.
+
+```{r, echo=TRUE, message=FALSE}
+# Install packages only, if they were not installed already.
+# We suppressed information on the installation and R versions.
+if (!requireNamespace("vegan", quietly = TRUE)) {      
+  install.packages("vegan")
+}
+if (!requireNamespace("adegenet", quietly = TRUE)) {   
+  install.packages("adegenet")
+}
+if (!requireNamespace("poppr", quietly = TRUE)) {   
+  install.packages("poppr")
+}
+suppressWarnings(library("vegan"))
+suppressWarnings(library("adegenet"))
+suppressWarnings(library("poppr"))
+
+
+```
+
+
+## Convert your data set into a genind
+
+Genetic data sets are divers. In addition to the differences between SNPs and microsatellites, there are many different file formats (e.g. GENETIX files (.gtx), Genepop files (.gen), Fstat files (.dat), STRUCTURE files (.str or .stru)). You could use ?import2genind() to receive more information on converting different file formats to a genind. 
+
+The genind we used here is included in the adegenet package (Devillard et al. 2009). The data set is from the stray cat (Felis catus L.), which is neither endangered nor geographical restricted. Therefore it cannot be used to identify KBAs and does not include names of potential KBAs. It includes names of different populations instead. Nevertheless, it can be used to explain the calculation steps to identify KBAs with distinct genetic diversity if we pretend those populations would be the names of potential KBAs. 
+
+
+```{r}
+# This is our example data set
+# It is a microsatellite data set.
+data(nancycats)
+
+# A genind includes basic and optional content.
+nancycats
+
+# It is important the names of the potential KBAs are included in the optional content.
+nancycats@pop
+
+```
+
+
+## Split your genind
+
+Δ⁺ is calculated for each area separately. For this reason we need a genind for every potential KBA.
+
+```{r}
+# save the names of all potential KBAs
+potential_KBAs <- nancycats@pop
+
+# The genind is split into smaller geninds.
+# The small geninds are saved in a list.
+# each small genind only contains individuals occurring in the potential KBA.
+genind_list <- lapply(unique(potential_KBAs), function(subset_by_potential_KBAs) {
+  individuals <- which(potential_KBAs == subset_by_potential_KBAs)
+  nancycats[individuals, ]
+})
+
+# the small geninds should be assigned to the name of the potential KBA instead of a number.
+names(genind_list) <- unique(potential_KBAs)
+
+# This way it is easier to find the genind belonging to the potential KBA of interest. 
+# Here we are interested in the potential KBA "P11".
+genind_list$P11
+
+
+```
+
+## Distinct genetic diversity 
+
+Distinct genetic diversity needs to be calculated for each genind separately. We demonstrate the two calculation steps (genetic distances and Δ⁺) in detail on the potential KBA "P11". Then it is demonstated how distinct genetic diversity can be calculated for all geninds.
+
+
+### Genetic distances
+
+Δ⁺ is based on genetic distances between individuals in each potential KBA. We recommend calculating genetic distances using the bitwise.dist() function of poppr. Bitwise distances are calculated quickly, also for huge SNP data sets.
+
+```{r}
+
+# calculate genetic distances
+dist_matrix <- bitwise.dist(genind_list$P11)
+dist_matrix
+
+```
+### Δ⁺
+
+Δ⁺ is calculated using the taxondive() function of vegan. taxondive() calculates the allelic distinctiveness for each individual and the average allelic distinctiveness for all individuals in the potential KBA. The average allelic distinctiveness (Δ⁺) can be found as EDplus (expected Delta plus) in the results.
+
+
+```{r}
+
+# To calculate Δ⁺ we need allele frequencies additionally to the distance matrix
+allele_frequencies <- tab(genind_list$P11, freq = TRUE)
+# Display only the first 3 individuals and first 3 alleles 
+allele_frequencies[1:3, 1:3]
+
+# calculate Δ⁺
+mod <- taxondive(t(allele_frequencies), dist_matrix)
+mod$EDplus
+
+```
+### Distinct genetic diversity in each potential KBA
+
+To calculate distinct genetic diversity for each potential KBA, we created a function which includes both calculation steps and returns Δ⁺.
+
+```{r}
+
+# create a function to calculate distinct genetic diversity
+calculate_EDplus <- function(genind) {
+  allele_frequencies <- tab(genind, freq = TRUE)
+  dist_matrix <- bitwise.dist(genind)
+  mod <- taxondive(t(allele_frequencies), dist_matrix)
+  return(mod$EDplus)
+}
+
+# apply the function to every genind in our list
+EDplus_values <- lapply(genind_list, calculate_EDplus)
+
+# Δ⁺ for each potential KBA can be displayed, e.g.
+EDplus_values$P11
+EDplus_values$P13
+
+```
+
+## Identify KBAs
+
+To identify a KBA, the species needs to be range-restricted (criterium B1) or threatened (criterium A1). Depending on the criteria different thresholds apply to the the ratio in which the area contributes to the total distinct genetic diversity. 
+
+
+```{r}
+
+# total distinct genetic diversity:
+sumDplus <- sum(unlist(EDplus_values))
+
+# calculate the ratio, in which each area contributes to the total distinct genetic diversity
+ratios <- unlist(EDplus_values)/sumDplus * 100
+ratios # in % 
+
+# If we have a range-restricted species the threshold would be more than ≥10%.
+# Not a single number of our percentages is higher than 10% so no of the areas would qualify as KBA.
+
+# If the species would be vulnerable (threshold: ≥ 1%) endangered, or critically endangered  all of the areas will be identified as KBAs.
+
+VU <- ratios[ratios >= 0.5]
+names(VU)
+
+
+
+
+
+
+```
+
+## References
+
+Clarke KR, Warwick RM (1998) A taxonomic distinctness index and its statistical properties. Journal of Applied Ecology, 35, 523–531.
+
+Devillard S, Jombart T, Pontier D (2009) Revealing cryptic genetic structuring in an urban population of stray cats (Felis silvestris catus). Mammalian Biology 74:59–71. DOI: 10.1016/j.mambio.2008.01.001, Data from: Jombart T (2008) adegenet. a R package for the multivariate analysis of genetic markers. Bioinformatics. nancycats [Dataset].
+
+IUCN (2016) A Global Standard for the Identification of Key Biodiversity Areas. Journal of Ecology and Rural Environment, Gland, Switzerland.
+
+Jombart T (2008) adegenet. a R package for the multivariate analysis of genetic markers. Bioinformatics, 1403-1405.
+
+Jombart T, Ahmed I (2011) adegenet. new tools for the analysis of genome-wide SNP data. Bioinformatics.
+
+Kamvar ZN, Tabima JF, Grünwald NJ (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ, 2, e281.
+
+Oksanen J, Simpson G, Blanchet F et al. (2024) vegan. Community Ecology Package.
+
