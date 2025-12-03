@@ -1,0 +1,159 @@
+---
+title: "How to calculate Distinct Genetic Diversity?"
+author: "Incognito"
+date: "2024-09-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Distinct Genetic Diversity is one of several options to identify a Key Biodiversity Area (KBA). If you want to include genetic information in the process of determining which area has a higher priority for conservation effort, we recommend using  Average Taxonomic Distinctiveness/AvTD/Delta+ on SNP or microsatellite data.
+
+This guide is intended to help you understand how to combine Average Taxonomic Distinctiveness/AvTD/Delta+ from the community ecology package vegan with your genetic data.
+
+## install packages
+
+In addition to the vegan package, you also need the adegenet package to simplify the handling of genetic data. If you have not already installed the two packages, install them and load them into your current R session.
+
+```{r, echo=TRUE, message=FALSE}
+
+if (!requireNamespace("vegan", quietly = TRUE)) {      
+  install.packages("vegan")
+}
+if (!requireNamespace("adegenet", quietly = TRUE)) {   
+  install.packages("adegenet")
+}
+library("vegan")
+library("adegenet")
+
+
+```
+
+
+## prepare your data: create a genind!
+
+This manual just shows one of several ways how to create a genind object. Use ?import2genind() to receive more information. You can import data to genind not only from a data frame, but an aligmnent of sequences or several data files like GENETIX files (.gtx), Genepop files (.gen), Fstat files (.dat), STRUCTURE files (.str or .stru) and not only microsatellite data sets but also SNP and AFLP data sets.
+ 
+In this example we import microsatellite data from a data frame. The first column was not only called “pop” like population, but the R example dataset nancycats also contains information about populations. Your dataset should contain area names instead. The row names are named like the individuals tested and all other columns after the first column are names of loci.
+
+To import from a data frame into genind, a vector with area names is needed and a table with genetic information of each individual without area names is required. Use ncode to specify how many letters belong to an allele. 
+
+```{r}
+# load microsatellite data set as a dataframe
+data(nancycats)
+df <- genind2df(nancycats)
+# view dataframe
+head(df)
+
+# area names -let's pretend they would be area names
+pop <- as.vector(df$pop)
+# view area names
+pop
+
+# loci and individuals
+head(df[2:ncol(df)])
+
+# create genind
+nancycats <- df2genind(df[2:ncol(df)], pop = pop, ncode = 3)  
+# this is how a genind is structured:
+nancycats
+
+```
+
+
+## calculate allele abundances
+The next step is to create a genpop object, as this is a quick and easy way to get the allele abundances for each area.
+
+```{r}
+# create genpop
+catpop <- genind2genpop(nancycats) 
+# this is how a genpop is structured:
+catpop
+
+# view your allele abundandes
+head(catpop@tab[, 1:3])
+
+# rename! These are allele abundances!
+allele_abundances <- catpop@tab
+
+
+```
+
+## calculate genetic distance between areas
+The best option to calculate genetic distances is to use the function taxa2dist() from the package vegan.
+
+```{r}
+
+# switch columns and rows
+t_allele_abundances <- t(allele_abundances)
+
+# calculate genetic distances
+taxdis <- taxa2dist(t_allele_abundances)
+
+```
+## calculate Distinct Genetic Diversity
+We calculate Distinct Genetic Diversity by calculating Average Taxonomic Distinctiveness/AvTD/Delta+.  
+```{r}
+
+# Calculate Average Taxonomic Distinctiveness/AvTD/Delta+
+mod <- taxondive(allele_abundances, taxdis)
+# view results
+mod$Dplus
+
+
+```
+## Apply KBA criteria
+To apply KBA criteria we want to know how much each area contributes to the total Distinct Genetic Diversity. Depending on how endangered the species you have examined is, a different threshold can be applied. Keep in mind that the example dataset contained additional information about populations not areas. Also, the example data set is from the stray cat (Felis catus L.), which is neither endangered nor geographical restricted. Therefore, the evaluation below only serves to demonstrate the method.
+
+```{r}
+
+# calculate ratios
+sumDplus <- sum(mod$Dplus)
+ratios <- mod$Dplus/sumDplus * 100
+ratios # in % 
+
+# KBA Criteria
+###############################
+###############################
+
+# A1:   Threatened species
+###############################
+# A1a:  Critically endangered/ Endangered species 
+#       Threshold: >= 0.5%
+A1a <- ratios[ratios >= 0.5]
+# Show the areas that are proposed as KBA(s) for criterion A1a.
+names(A1a) # In this example all areas would qualify as KBAs.
+
+# A1b:  Vulnerable species
+#       Threshold: >= 1%
+A1b <- ratios[ratios >= 1]
+# Show the areas that are proposed as KBA(s) for criterion A1b.
+names(A1b) # In this example all areas would qualify as KBAs.
+
+# A1c:  Critically endangered/ Endangered species due only to past/current decline [Red List A only, but not A3 only]
+#       Threshold: >= 0.1%
+A1c <- ratios[ratios >= 0.1]
+# Show the areas that are proposed as KBA(s) for criterion A1c.
+names(A1c) # In this example all areas would qualify as KBAs.
+
+# A1d:  Vulnerable species due only to past/current decline [Red List A only, but not A3 only]
+#       Threshold: >= 0.2%
+A1d <- ratios[ratios >= 0.2]
+# Show the areas that are proposed as KBA(s) for criterion A1d.
+names(A1d) # In this example all areas would qualify as KBAs.
+
+
+
+# B1:   Individual geographically restricted species
+###############################
+#       Threshold >= 10%
+B1 <- ratios[ratios >= 10]
+# Show the areas that are proposed as KBA(s) for criterion B1.
+names(B1) # In this example none of the areas would qualify as KBAs.
+
+```
