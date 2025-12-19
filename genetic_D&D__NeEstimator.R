@@ -137,9 +137,7 @@ rldne <- exportGenePop_RLDNe(EFGLdata = efgl)
 rldne <- create_LDNe_params(rldne)
 std_out <- run_LDNe(rldne)
 Ne_estimates <- read_LDNeOutFile(rldne)
-
-Ne_estimates<-readLDNe_tab(path = param_files$Ne_out_tab)
-  
+ 
 
 # create an empty data frame to save Ne for every site
 Ne_R_results <- Ne_estimates %>%
@@ -157,4 +155,5 @@ Ne_R_results <- Ne_estimates %>%
 # save results as a .csv- file
 # make sure the final results are saved in the correct folder
 write.csv(Ne_R_results, file = "Ne_results.csv", row.names = FALSE)
+
 
