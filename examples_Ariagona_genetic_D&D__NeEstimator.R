@@ -162,7 +162,7 @@ std_out <- run_LDNe(rldne)
 df <- read_LDNeOutFile(rldne)
         
 # use original names for Pop
-df$Pop <-  rep(sort(unique(original_file$...2)), each = 4)
+df$Pop <-  rep(sort(unique(original_file$...2[(!(original_file$...2 %in% remove_populations))])), each = 4)
 
 # save results
 write.csv(df, file = "C:/Users/Gronefeld/Desktop/D&D/Calculate_D&D_shortened/Results_Ariagona/NeEstimator/Ne_results.csv", row.names = FALSE)
@@ -172,3 +172,4 @@ df[df$CritValue == 0.05, c("Pop", "Ne")]
 # go back to the directory of the project, to enable running other scripts after this script
 setwd("..")
 setwd("..")
+
