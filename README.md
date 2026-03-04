@@ -1,7 +1,7 @@
 Main Calculations:
 
 
-To identify KBAs using Δ⁺ with your own dataset follow the instructions on this webpage: https://rpubs.com/Who_could_this_be_2/1376052.
+To identify KBAs using Δ⁺ with your own dataset follow the instructions on this webpage: https://rpubs.com/Who_could_this_be_2/1376052. If you have a (small) microsatellite dataset you can also try this App: https://jth1smyaccounhuijk56yesyname.shinyapps.io/Distinct_Genetic_Diversity_App/.
 
 
 To calculate correlations, identify KBAs, and display the ratios of KBAs identified between different methods different scripts were used that all start with genetic_D&D. 
